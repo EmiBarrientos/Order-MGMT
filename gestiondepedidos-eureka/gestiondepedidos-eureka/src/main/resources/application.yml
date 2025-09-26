@@ -1,0 +1,16 @@
+server:
+  port:8761
+
+spring:
+   application:
+      name: gdp-eureka
+
+eureka:
+   instance:
+     hostname: localhost
+
+   client:
+     register-with-eureka:  false
+     fecth-registry: false
+     server-url:
+        defaultZone: http://localhost:${server.port}/eureka/
