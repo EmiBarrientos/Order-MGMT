@@ -7,8 +7,10 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="gestiondepedidos-gateway" />
+        <module name="ordermgmt-product" />
         <module name="gestiondepedidos-config" />
         <module name="gestiondepedidos-eureka" />
+        <module name="ordermgmt-orders" />
       </profile>
     </annotationProcessing>
   </component>
@@ -17,6 +19,8 @@
       <module name="gestiondepedidos-config" options="-parameters" />
       <module name="gestiondepedidos-eureka" options="-parameters" />
       <module name="gestiondepedidos-gateway" options="-parameters" />
+      <module name="ordermgmt-orders" options="-parameters" />
+      <module name="ordermgmt-product" options="-parameters" />
     </option>
   </component>
 </project>

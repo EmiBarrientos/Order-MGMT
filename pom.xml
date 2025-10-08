@@ -10,17 +10,19 @@
     <relativePath/>
   </parent>
 
-  <groupId>com.mycompany.app</groupId>
-  <artifactId>GestionDePedidos</artifactId>
+  <groupId>com.ordermgmt</groupId>
+  <artifactId>order-mgmt-parent</artifactId>
   <version>1.0-SNAPSHOT</version>
 
-  <name>GestionDePedidos</name>
+  <name>order-mgmt</name>
   <packaging>pom</packaging>
 
   <modules>
-    <module>gestiondepedidos-gateway/gestiondepedidos-gateway</module>
-    <module>gestiondepedidos-eureka/gestiondepedidos-eureka</module>
-    <module>gestiondepedidos-config</module>
+    <module>ordermgmt-gateway</module>
+    <module>ordermgmt-eureka</module>
+    <module>ordermgmt-config</module>
+    <module>ordermgmt-orders</module>
+    <module>ordermgmt-product</module>
   </modules>
 
   <properties>
