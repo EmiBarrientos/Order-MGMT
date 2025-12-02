@@ -35,15 +35,17 @@ Incluye:
 ```
 ---
 
-Componentes
-- Servicio   	Puerto	Rol
-- Config Server	8888	Centraliza configuraciones para todos los microservicios
-- Eureka Server	8761	Registro de servicios / discovery dinámico
-- Gateway (MVC)	8080	Entrada única al sistema, rutas dinámicas
-- Product-Service	8090	CRUD productos
-- Order-Service	9090	CRUD pedidos
+| Componentes               | Puerto   | Rol | 
+|---------------------------|----------|---------------------------------------------------------|
+| Config Server             | 8888	   | Centraliza configuraciones para todos los microservicios|
+| Eureka Server	8761	      | 8761     | Registro de servicios / discovery dinámico              |
+| Gateway (MVC)             | 8080     | Entrada única al sistema, rutas dinámicas               |
+| Product-Service           | 8090     |CRUD productos                                           |
+| Order-Service		          | 9090     |CRUD pedidos                                             |
+
 ---
----
+
+```
 ## 🚀 Características principales
 1. Configuración Centralizada
 
@@ -101,10 +103,10 @@ Aislamiento de puertos internos
 
 Cada micro:
 
-- ✔ Tiene su propio application.yml centralizado
-- ✔ Su propio controller
-- ✔ Su propio modelo
-- ✔ Su propia capa de persistencia
+ ✔ Tiene su propio application.yml centralizado
+ ✔ Su propio controller
+ ✔ Su propio modelo
+ ✔ Su propia capa de persistencia
 
 Endpoints del estilo:
 
@@ -112,6 +114,7 @@ GET  /api/product/find/{id}
 GET  /api/order/find/{id}
 POST /api/order/create
 ...
+```
 ---
 
 ## 🛠️ Tecnologías utilizadas
@@ -142,7 +145,6 @@ Eureka registra servicios automáticamente.
 
 El gateway lee Eureka y enruta dinámicamente.
 
-Si mañana cambiás puertos → no cambiás código, solo configuración remota.
 ---
 ## 🧪 Cómo Probar
 - 1️⃣ Levantar Config Server:
