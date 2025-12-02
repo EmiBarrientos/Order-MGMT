@@ -1,0 +1,14 @@
+package com.ordermgmt.gateway.controller;
+
+
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+    public class Getawaycontroller {
+
+        @GetMapping("/__gw-test")
+        public String health() {
+            return "GATEWAY OK";
+        }
+    }

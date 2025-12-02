@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 
-@RequestMapping("v1/api/product")
+@RequestMapping("/api/product")
 @RequiredArgsConstructor
 @RestController
 public class ProductController {
@@ -20,6 +20,8 @@ public class ProductController {
         ProductDto productDto=productService.getProductById(id);
         return ResponseEntity.ok(productDto);
     }
+
+
     @PostMapping("/save")
     public ResponseEntity<ProductDto> saveProduct(@RequestBody ProductDto productDto){
         productService.saveProduct(productDto);
@@ -37,6 +39,8 @@ public class ProductController {
         List<ProductDto> productDtoList=productService.getProducts();
         return ResponseEntity.ok(productDtoList);
     }
+
+
     @PutMapping("/update/{id}")
     public ResponseEntity<?> updateProduct(@PathVariable Integer id, @RequestBody ProductDto productDto){
         productService.updateProduct(id, productDto);

@@ -1,0 +1,36 @@
+server:
+  port: 8080
+
+
+spring:
+  application:
+    name: ordermgmt-gateway
+  cloud:
+    gateway:
+      mvc:
+        discovery:
+          locator:
+            enabled: true
+        routes:
+          - id: ordermgmt-product
+            uri: lb://ordermgmt-product
+            predicates:
+              - Path=/api/product/**
+          - id: ordermgmt-orders
+            uri: lb://ordermgmt-orders
+            predicates:
+              - Path=/api/order/**
+
+eureka:
+  client:
+    # Para usar lb:// necesitás que el gateway consulte Eureka
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+
+logging:
+  level:
+    org.springframework.cloud.gateway: TRACE
+    org.springframework.cloud.gateway.route.RouteLocator: INFO
+    reactor.netty.http.client: DEBUG
