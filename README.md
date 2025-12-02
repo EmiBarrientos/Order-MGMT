@@ -36,12 +36,12 @@ Incluye:
 ---
 
 Componentes
-Servicio	Puerto	Rol
-Config Server	8888	Centraliza configuraciones para todos los microservicios
-Eureka Server	8761	Registro de servicios / discovery dinámico
-Gateway (MVC)	8080	Entrada única al sistema, rutas dinámicas
-Product-Service	8090	CRUD productos
-Order-Service	9090	CRUD pedidos
+- Servicio	Puerto	Rol
+- Config Server	8888	Centraliza configuraciones para todos los microservicios
+- Eureka Server	8761	Registro de servicios / discovery dinámico
+- Gateway (MVC)	8080	Entrada única al sistema, rutas dinámicas
+- Product-Service	8090	CRUD productos
+- Order-Service	9090	CRUD pedidos
 ---
 ---
 ## 🚀 Características principales
@@ -101,10 +101,10 @@ Aislamiento de puertos internos
 
 Cada micro:
 
--[✔ Tiene su propio application.yml centralizado]
--[✔ Su propio controller]
--[✔ Su propio modelo]
--[✔ Su propia capa de persistencia]
+- ✔ Tiene su propio application.yml centralizado
+- ✔ Su propio controller
+- ✔ Su propio modelo
+- ✔ Su propia capa de persistencia
 
 Endpoints del estilo:
 
