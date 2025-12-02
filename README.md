@@ -10,7 +10,9 @@ Incluye:
 ✔ Comunicación mediante discovery
 ✔ Rutas dinámicas
 ✔ Versionado de API
+---
 
+```
 🧩 Arquitectura General
                    ┌──────────────────┐
                    │  Config Server    │
@@ -30,6 +32,8 @@ Incluye:
                                              ┌────────────────┐
                                              │ Order-MS 9090  │
                                              └────────────────┘
+```
+---
 
 Componentes
 Servicio	Puerto	Rol
@@ -38,6 +42,8 @@ Eureka Server	8761	Registro de servicios / discovery dinámico
 Gateway (MVC)	8080	Entrada única al sistema, rutas dinámicas
 Product-Service	8090	CRUD productos
 Order-Service	9090	CRUD pedidos
+---
+---
 🚀 Características principales
 1. Configuración Centralizada
 
@@ -106,8 +112,8 @@ GET  /api/product/find/{id}
 GET  /api/order/find/{id}
 POST /api/order/create
 ...
-
-🔧 Tecnologías Utilizadas
+---
+##🔧 Tecnologías Utilizadas
 Área	Stack
 Backend	Java 17, Spring Boot 3.5.6
 Microservices	Spring Cloud 2024.x
@@ -119,7 +125,8 @@ Observabilidad	Actuator
 Comunicación	LoadBalancer + Discovery Client
 PostgreSQL
 MySQL
-📡 Comportamiento del Sistema
+---
+##📡 Comportamiento del Sistema
 
 Los servicios levantan sin configuración local.
 
@@ -162,10 +169,10 @@ GET http://localhost:8080/api/order/find/1
 
 Si llegan correctamente → routing OK.
 
-📚 Diagrama de secuencia (flujo de request)
+##📚 Diagrama de secuencia (flujo de request)
 User → Gateway → Eureka (resolve) → Service → Response → Gateway → User
 
-🛡️ Mejoras futuras
+##🛡️ Mejoras futuras
 
 Agregarle front funcional
 
@@ -179,7 +186,7 @@ Logging distribuido con traceId
 
 Implementar Kafka para eventos (alta de pedidos, etc.)
 
-👨‍💻 Autor
+##👨‍💻 Autor
 
-Emiliano Barrientos
+**Emiliano Barrientos**
 Backend Developer — Java / Spring Boot
