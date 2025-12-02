@@ -2,14 +2,14 @@
 
 Sistema de gestión de productos y pedidos construido sobre una arquitectura de microservicios modular, escalable y centralizada.
 Incluye:
-✔ Spring Cloud Gateway (MVC)
-✔ Eureka Service Discovery
-✔ Config Server nativo
-✔ Microservicios independientes (Products + Orders)
-✔ Configuración centralizada
-✔ Comunicación mediante discovery
-✔ Rutas dinámicas
-✔ Versionado de API
+-[✔ Spring Cloud Gateway (MVC)]
+-[✔ Eureka Service Discovery]
+-[✔ Config Server nativo]
+-[✔ Microservicios independientes (Products + Orders)]
+-[✔ Configuración centralizada]
+-[✔ Comunicación mediante discovery]
+-[✔ Rutas dinámicas]
+-[✔ Versionado de API]
 ---
 
 ```
@@ -101,10 +101,10 @@ Aislamiento de puertos internos
 
 Cada micro:
 
-✔ Tiene su propio application.yml centralizado
-✔ Su propio controller
-✔ Su propio modelo
-✔ Su propia capa de persistencia
+-[✔ Tiene su propio application.yml centralizado]
+-[✔ Su propio controller]
+-[✔ Su propio modelo]
+-[✔ Su propia capa de persistencia]
 
 Endpoints del estilo:
 
