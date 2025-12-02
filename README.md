@@ -1,4 +1,4 @@
-📦 Order-MGMT — Microservices Architecture (Spring Cloud)
+## 📦 Order-MGMT — Microservices Architecture (Spring Cloud)
 
 Sistema de gestión de productos y pedidos construido sobre una arquitectura de microservicios modular, escalable y centralizada.
 Incluye:
@@ -44,7 +44,7 @@ Product-Service	8090	CRUD productos
 Order-Service	9090	CRUD pedidos
 ---
 ---
-🚀 Características principales
+## 🚀 Características principales
 1. Configuración Centralizada
 
 Todos los microservicios cargan su configuración desde Config Server a través de:
@@ -113,7 +113,7 @@ GET  /api/order/find/{id}
 POST /api/order/create
 ...
 ---
-##🔧 Tecnologías Utilizadas
+## 🔧 Tecnologías Utilizadas
 Área	Stack
 Backend	Java 17, Spring Boot 3.5.6
 Microservices	Spring Cloud 2024.x
@@ -126,7 +126,7 @@ Comunicación	LoadBalancer + Discovery Client
 PostgreSQL
 MySQL
 ---
-##📡 Comportamiento del Sistema
+## 📡 Comportamiento del Sistema
 
 Los servicios levantan sin configuración local.
 
@@ -137,7 +137,7 @@ Eureka registra servicios automáticamente.
 El gateway lee Eureka y enruta dinámicamente.
 
 Si mañana cambiás puertos → no cambiás código, solo configuración remota.
-
+---
 🧪 Cómo Probar
 1️⃣ Levantar Config Server:
 mvn spring-boot:run
@@ -168,11 +168,11 @@ GET http://localhost:8080/api/order/find/1
 
 
 Si llegan correctamente → routing OK.
-
-##📚 Diagrama de secuencia (flujo de request)
+---
+## 📚 Diagrama de secuencia (flujo de request)
 User → Gateway → Eureka (resolve) → Service → Response → Gateway → User
 
-##🛡️ Mejoras futuras
+## 🛡️ Mejoras futuras
 
 Agregarle front funcional
 
@@ -186,7 +186,7 @@ Logging distribuido con traceId
 
 Implementar Kafka para eventos (alta de pedidos, etc.)
 
-##👨‍💻 Autor
+## 👨‍💻 Autor
 
 **Emiliano Barrientos**
 Backend Developer — Java / Spring Boot
