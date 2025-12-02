@@ -36,7 +36,7 @@ Incluye:
 ---
 
 Componentes
-- Servicio	Puerto	Rol
+- Servicio   	Puerto	Rol
 - Config Server	8888	Centraliza configuraciones para todos los microservicios
 - Eureka Server	8761	Registro de servicios / discovery dinámico
 - Gateway (MVC)	8080	Entrada única al sistema, rutas dinámicas
@@ -113,18 +113,24 @@ GET  /api/order/find/{id}
 POST /api/order/create
 ...
 ---
-## 🔧 Tecnologías Utilizadas
-Área	Stack
-Backend	Java 17, Spring Boot 3.5.6
-Microservices	Spring Cloud 2024.x
-Service Discovery	Eureka
-API Gateway	Spring Cloud Gateway (MVC)
-Configuración	Spring Cloud Config Server
-Build	Maven
-Observabilidad	Actuator
-Comunicación	LoadBalancer + Discovery Client
-PostgreSQL
-MySQL
+
+## 🛠️ Tecnologías utilizadas
+
+| Tecnología               | Uso principal                                                   |
+|--------------------------|-----------------------------------------------------------------|
+| Java 17 / 21 / 23         | Lenguaje de programación utilizado para construir la aplicación |
+| Spring Boot 3.5.6         | Framework principal para el backend y configuración automática  |
+| Spring Data JPA           | Abstracción para la persistencia de datos con Hibernate         |
+| Eureka                    | Para el registro de los microservicios                          |
+| Gateway                   | para la centralizacion de los puertos                           |
+| Maven                     | Gestión de dependencias y ciclo de vida del proyecto            |
+| MySQL / PostgreSQL        | Bases de datos para el almacenamiento persistente               |
+| Lombok                    | Eliminación de código repetitivo (getters, setters, etc.)       |
+| Actuator                  | monitoreo la aplicación, recopilación de métricas               |
+| Config server             | centralizacion de las configuraciones                           |
+
+
+
 ---
 ## 📡 Comportamiento del Sistema
 
@@ -138,53 +144,53 @@ El gateway lee Eureka y enruta dinámicamente.
 
 Si mañana cambiás puertos → no cambiás código, solo configuración remota.
 ---
-🧪 Cómo Probar
-1️⃣ Levantar Config Server:
-mvn spring-boot:run
+## 🧪 Cómo Probar
+- 1️⃣ Levantar Config Server:
+- mvn spring-boot:run
 
 
-Puerto: 8888
+- Puerto: 8888
 
-2️⃣ Levantar Eureka:
-mvn spring-boot:run
-
-
-Puerto: 8761
-
-Abrir en navegador:
-
-http://localhost:8761
-
-3️⃣ Levantar Gateway:
-mvn spring-boot:run
+- 2️⃣ Levantar Eureka:
+- mvn spring-boot:run
 
 
-Puerto: 8080
+- Puerto: 8761
 
-4️⃣ Levantar Product-Service y Order-Service
-5️⃣ Probar endpoints vía Gateway:
-GET http://localhost:8080/api/product/find/1
-GET http://localhost:8080/api/order/find/1
+- Abrir en navegador:
+
+- http://localhost:8761
+
+- 3️⃣ Levantar Gateway:
+- mvn spring-boot:run
 
 
-Si llegan correctamente → routing OK.
+- Puerto: 8080
+
+- 4️⃣ Levantar Product-Service y Order-Service
+- 5️⃣ Probar endpoints vía Gateway:
+- GET http://localhost:8080/api/product/find/1
+- GET http://localhost:8080/api/order/find/1
+
+
+- Si llegan correctamente → routing OK.
 ---
 ## 📚 Diagrama de secuencia (flujo de request)
 User → Gateway → Eureka (resolve) → Service → Response → Gateway → User
 
 ## 🛡️ Mejoras futuras
 
-Agregarle front funcional
+🔹 Agregarle front funcional
 
-Implementar Circuit Breaker (Resilience4j)
+🔹 Implementar concurrencia
 
-Migrar a Docker Compose
+🔹 Migrar a Docker Compose
 
-Añadir un servicio de autenticación
+🔹 Añadir un servicio de autenticación
 
-Logging distribuido con traceId
+🔹 Logging distribuido con traceId
 
-Implementar Kafka para eventos (alta de pedidos, etc.)
+🔹 Implementar Kafka para eventos (alta de pedidos, etc.)
 
 ## 👨‍💻 Autor
 
