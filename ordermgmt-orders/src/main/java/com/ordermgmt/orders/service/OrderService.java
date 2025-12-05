@@ -2,6 +2,7 @@ package com.ordermgmt.orders.service;
 
 import com.ordermgmt.orders.client.ProductClient;
 import com.ordermgmt.orders.dto.OrderDto;
+import com.ordermgmt.orders.dto.OrderOutputDto;
 import com.ordermgmt.orders.dto.ProductDto;
 import com.ordermgmt.orders.entity.Order;
 import com.ordermgmt.orders.https.response.ProductByIdResponse;
@@ -10,7 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 public class OrderService implements IOrderService{
@@ -94,4 +97,73 @@ public class OrderService implements IOrderService{
                 .stock(productDto.getStock())
                 .build();
     }
+
+    @Override
+    public List<OrderOutputDto> getAllWhitProduct() {
+        List<Order> orders = iOrderRepository.findAll(); // o con paginado
+
+        // 1) colectar todos los productIds
+        List<Long> allProductIds = orders.stream()
+                .flatMap(o -> o.getIdProducto().stream())
+                .toList();
+
+        System.out.println("Lista completa: " + allProductIds);
+
+        if (allProductIds.isEmpty()) {
+
+            return orders.stream()
+                    .map(o -> new OrderOutputDto(o.getId(), o.getUserId(), Collections.emptyList(), o.getEstadoPedido()))
+                    .collect(Collectors.toList());
+        }
+
+        List<ProductDto> products = productClient.getProductsByIds(allProductIds);
+        System.out.println("lista productos desde de ir a pedidios: "+ products.toString());
+
+        Map<Long, ProductDto> productMap = products.stream()
+                .collect(Collectors.toMap(ProductDto::getId, Function.identity()));
+        System.out.println("lista productosMap desde hacer el productos.stream: "+ productMap.toString());
+
+
+        return orders.stream().map(o -> {
+            List<ProductDto> pList = o.getIdProducto().stream()
+                    .map(id -> productMap.get(id))
+                    .filter(Objects::nonNull) 
+                    .collect(Collectors.toList());
+            System.out.println("lista PLIST desde cargar: "+ pList.toString());
+
+            return new OrderOutputDto(o.getId(), o.getUserId(), pList, o.getEstadoPedido());
+        }).collect(Collectors.toList());
+    }
+
 }
+
+
+
+
+
+/******************************************************************************
+ *
+ *  public List<OrderOutputDto> getAllOdrderWhitProduct() {
+ *
+ *
+ *            List<OrderOutputDto> orderOutputDtoList=iOrderRepository.findAll()
+ *                    .stream()
+ *                    .map(order -> OrderOutputDto.builder()
+ *                            .userId(order.getUserId())
+ *                            .id(order.getId())
+ *                            .estadoPedido(order.getEstadoPedido())
+ *                            .productDtoListDto(productClient.findProductsByIds())
+ *
+ *
+ *                            .build())
+ *                    .toList();
+ *         return orderOutputDtoList;
+ *     }
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ * **/

@@ -2,12 +2,18 @@ package com.ordermgmt.products.controller;
 import com.ordermgmt.products.dto.ProductDto;
 import com.ordermgmt.products.service.ProductService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.List;
 
-
+@CrossOrigin(
+        origins = "http://localhost:5173",
+        allowedHeaders = "*",
+        methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE, RequestMethod.OPTIONS}
+)
 @RequestMapping("/api/product")
 @RequiredArgsConstructor
 @RestController
@@ -47,4 +53,30 @@ public class ProductController {
         return ResponseEntity.ok("Product Updated Successfully");
     }
 
+    @PostMapping("/find-by-ids")
+     public ResponseEntity<List<ProductDto>> getProductsByIds(@RequestBody List<Long> ids) {
+        System.out.println("Lista completa: " +ids);
+          if (ids == null || ids.isEmpty()) {
+              return ResponseEntity.ok(Collections.emptyList());
+          }
+
+          if (ids.size() > 1000) {
+              return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE).build();
+          }
+          List<ProductDto> result = productService.findByIds(ids);
+        System.out.println("Lista completa: " +result.toString());
+          return ResponseEntity.ok(result);
+      }
+
+
+
 }
+
+
+/**
+ *
+ *
+ *
+ *
+ *
+ * */

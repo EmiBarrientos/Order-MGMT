@@ -5,16 +5,20 @@ import com.ordermgmt.products.entity.Product;
 import com.ordermgmt.products.repository.IProductRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 
 @Service
 public class ProductService implements IProductService{
 
-    private final IProductRepository IProductRepository;
+    private final IProductRepository iProductRepository;
+
 
     public ProductService(IProductRepository IProductRepository) {
-        this.IProductRepository = IProductRepository;
+        this.iProductRepository = IProductRepository;
     }
 
 
@@ -27,32 +31,32 @@ public class ProductService implements IProductService{
         product.setPrice(productDto.getPrice());
         product.setStock(productDto.getStock());
 
-        IProductRepository.save(product);
+        iProductRepository.save(product);
 
     }
 
     @Override
     public void deleteProduct(Integer id) {
-        IProductRepository.deleteById(id);
+        iProductRepository.deleteById(id);
 
     }
 
     @Override
     public void updateProduct(Integer id, ProductDto productDto) {
-        Product product=IProductRepository.findById(id).orElse(null);
+        Product product=iProductRepository.findById(id).orElse(null);
         if(product!=null){
             product.setProductName(productDto.getProductName());
             product.setStock(productDto.getStock());
             product.setId(productDto.getId());
             product.setPrice(productDto.getPrice());
-            IProductRepository.save(product);
+            iProductRepository.save(product);
 
         }
     }
 
     @Override
     public List<ProductDto> getProducts() {
-        List<ProductDto> productDtoList =IProductRepository.findAll()
+        List<ProductDto> productDtoList =iProductRepository.findAll()
                 .stream()
                 .map(product -> ProductDto.builder()
                         .id(product.getId())
@@ -67,7 +71,7 @@ public class ProductService implements IProductService{
 
     @Override
     public ProductDto getProductById(Integer id) {
-        Product product=IProductRepository.findById(id).orElse(null);
+        Product product=iProductRepository.findById(id).orElse(null);
 
         ProductDto productDto=ProductDto.builder()
                 .productName(product.getProductName())
@@ -78,4 +82,39 @@ public class ProductService implements IProductService{
 
       return productDto;
     }
+
+
+    public List<ProductDto> findByIds(List<Long> ids) {
+        List<Product> products = iProductRepository.findByIdIn(ids); // JPA: SELECT ... WHERE id IN (...)
+
+        return products.stream()
+                .map(this::toDto) // Un método que hace la conversión
+                .toList();
+    }
+
+    private ProductDto toDto(Product product) {
+        ProductDto productDto= ProductDto.builder()
+                .price(product.getPrice())
+                .productName(product.getProductName())
+                .stock(product.getStock())
+                .id(product.getId())
+                .build();
+
+        return productDto;
+    }
 }
+
+
+
+/*
+
+*
+public List<ProductDto> findByIds(List<Long> ids) {
+        List<Product> products = iProductRepository.findAllById(ids); // JPA: SELECT ... WHERE id IN (...)
+        return products.stream()
+                .map(mapper::toDto)
+                .collect(Collectors.toList());
+    }
+
+
+**/

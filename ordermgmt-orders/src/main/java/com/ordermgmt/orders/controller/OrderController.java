@@ -1,6 +1,7 @@
 package com.ordermgmt.orders.controller;
 
 import com.ordermgmt.orders.dto.OrderDto;
+import com.ordermgmt.orders.dto.OrderOutputDto;
 import com.ordermgmt.orders.dto.ProductDto;
 import com.ordermgmt.orders.service.OrderService;
 import lombok.RequiredArgsConstructor;
@@ -9,6 +10,13 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+
+
+@CrossOrigin(
+        origins = "http://localhost:5173",
+        allowedHeaders = "*",
+        methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE, RequestMethod.OPTIONS}
+)
 @RequestMapping("/api/order")
 @RestController
 @RequiredArgsConstructor
@@ -40,7 +48,6 @@ public class OrderController {
         return ResponseEntity.ok(orderDtoList);
     }
 
-
     @PutMapping("/update/{id}")
     public ResponseEntity<?> updateOrder(@PathVariable Integer id, @RequestBody OrderDto orderDto){
         orderService.updateOrder(orderDto, id);
@@ -52,4 +59,29 @@ public class OrderController {
 
         return ResponseEntity.ok(orderService.findProductById(idProduct));
     }
+
+    @GetMapping("/with-products")
+    public ResponseEntity<List<OrderOutputDto>> getAllWithProducts() {
+        List<OrderOutputDto> result = orderService.getAllWhitProduct();
+        return ResponseEntity.ok(result);
+
+    }
+
 }
+
+
+
+
+
+/************************************************
+ *
+ * /* @GetMapping("findall-with-products")
+ *     public ResponseEntity <List<OrderOutputDto>> getAllWithProducts(){
+ *         List<OrderOutputDto> orderOutputDtoList=getAllOrderWithProducts();
+ *         return ResponseEntity.ok(orderOutputDtoList);
+ *     }
+ *
+ *
+ *
+ *
+ * */

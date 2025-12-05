@@ -1,6 +1,7 @@
 package com.ordermgmt.orders.service;
 
 import com.ordermgmt.orders.dto.OrderDto;
+import com.ordermgmt.orders.dto.OrderOutputDto;
 import com.ordermgmt.orders.https.response.ProductByIdResponse;
 
 import java.util.List;
@@ -19,4 +20,5 @@ public interface IOrderService {
 
    ProductByIdResponse findProductById(Integer productId);
 
+   List<OrderOutputDto> getAllWhitProduct();
 }

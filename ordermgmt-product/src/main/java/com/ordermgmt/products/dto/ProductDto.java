@@ -2,6 +2,7 @@ package com.ordermgmt.products.dto;
 
 import lombok.*;
 
+@ToString
 @Getter
 @Setter
 @Builder
