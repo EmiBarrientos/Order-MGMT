@@ -9,11 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Collections;
 import java.util.List;
 
-@CrossOrigin(
-        origins = "http://localhost:5173",
-        allowedHeaders = "*",
-        methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE, RequestMethod.OPTIONS}
-)
+@CrossOrigin(origins = "http://localhost:5173")
 @RequestMapping("/api/product")
 @RequiredArgsConstructor
 @RestController
@@ -64,7 +60,7 @@ public class ProductController {
               return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE).build();
           }
           List<ProductDto> result = productService.findByIds(ids);
-        System.out.println("Lista completa: " +result.toString());
+        System.out.println("Lista completa result: " +result.toString());
           return ResponseEntity.ok(result);
       }
 

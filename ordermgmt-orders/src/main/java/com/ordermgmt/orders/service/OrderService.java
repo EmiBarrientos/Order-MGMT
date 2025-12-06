@@ -127,7 +127,7 @@ public class OrderService implements IOrderService{
         return orders.stream().map(o -> {
             List<ProductDto> pList = o.getIdProducto().stream()
                     .map(id -> productMap.get(id))
-                    .filter(Objects::nonNull) 
+                    .filter(Objects::nonNull)
                     .collect(Collectors.toList());
             System.out.println("lista PLIST desde cargar: "+ pList.toString());
 

@@ -2,8 +2,8 @@ package com.ordermgmt.orders.dto;
 
 import com.ordermgmt.orders.enums.EstadoPedido;
 import lombok.*;
-
 import java.util.List;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -12,7 +12,7 @@ import java.util.List;
 public class OrderOutputDto {
     private int id;
     private Long userId;
-    private List<ProductDto> productDtoListDto;
+    private List<ProductDto> productDtoList;
     private EstadoPedido estadoPedido;
 
 }

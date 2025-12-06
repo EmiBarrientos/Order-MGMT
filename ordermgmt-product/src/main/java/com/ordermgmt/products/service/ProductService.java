@@ -4,11 +4,8 @@ import com.ordermgmt.products.dto.ProductDto;
 import com.ordermgmt.products.entity.Product;
 import com.ordermgmt.products.repository.IProductRepository;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
+
 
 
 @Service
@@ -88,7 +85,7 @@ public class ProductService implements IProductService{
         List<Product> products = iProductRepository.findByIdIn(ids); // JPA: SELECT ... WHERE id IN (...)
 
         return products.stream()
-                .map(this::toDto) // Un método que hace la conversión
+                .map(this::toDto)
                 .toList();
     }
 
