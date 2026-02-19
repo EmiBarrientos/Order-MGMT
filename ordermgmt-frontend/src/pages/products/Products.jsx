@@ -1,5 +1,7 @@
-import {  useState } from "react";
+import { useState } from "react";
 import { getAllProducts } from "../../services/products";
+import ProductActions from "../../components/products/ProductsActions";
+
 
 
 export default function Products() {
@@ -7,65 +9,67 @@ export default function Products() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [visible, setVisible] = useState(false);
-  
- const loadOrders = async () => {
-      if (visible) {
-       setVisible(false);
-       return;
-     }
- 
-     setVisible(true);
-     setLoading(true);
-     setError(null);
-    
-    
-   try {
-     const data = await getAllProducts();
-     setProducts(data);
-   } catch (err) {
-     console.error(err);
-     setError("Error al cargar órdenes");
-   } finally {
-     setLoading(false);
-   }
- };
+
+  const loadOrders = async () => {
+    if (visible) {
+      setVisible(false);
+      return;
+    }
+
+    setVisible(true);
+    setLoading(true);
+    setError(null);
+
+
+    try {
+      const data = await getAllProducts();
+      setProducts(data);
+    } catch (err) {
+      console.error(err);
+      setError("Error al cargar órdenes");
+    } finally {
+      setLoading(false);
+    }
+  };
 
 
   return (
     <div className="p-6 text-white">
-      <h1 className="text-2xl font-bold">Productos</h1>
+      <h1 className="text-2xl font-bold mb-4">Productos</h1>
 
-       <button
-        onClick={loadOrders}
-        className="bg-blue-600 text-white px-4 py-2 rounded shadow"
-      >
-         {visible ? "Ocultar productos" : "Mostrar productos"}
+      <ProductActions
+        visible={visible}
+        loading={loading}
+        onToggle={loadOrders}
+        onForceReload={() => {
+          setVisible(false);
+          loadOrders();
+        }}
+      />
 
-      </button>
-      
       {visible && (<div className="space-y-4">
         {products.map((product) => (
-            <div
-              key={product.id}
-              className="p-4 bg-slate-800 rounded-lg border border-slate-700"
-            >
-              <p>
-                <span className="font-semibold">ID:</span> {product.id}
-              </p>
-              <p>
-                <span className="font-semibold">nombre del producto:</span>{" "}
-                {product.productName}
-              </p>
-              <p>
-                <span className="font-semibold">Stock:</span>{" "}
-                {product.stock}
-              </p>
-              <p>
-                <span className="font-semibold">precio:</span>{" "}
-                {product.price.toFixed(2)}
-              </p>
-            </div>
-          ))}
+          <div
+            key={product.id}
+            className="p-4 bg-slate-800 rounded-lg border border-slate-700"
+          >
+            <p>
+              <span className="font-semibold">ID:</span> {product.id}
+            </p>
+            <p>
+              <span className="font-semibold">nombre del producto:</span>{" "}
+              {product.productName}
+            </p>
+            <p>
+              <span className="font-semibold">Stock:</span>{" "}
+              {product.stock}
+            </p>
+            <p>
+              <span className="font-semibold">precio:</span>{" "}
+              {product.price.toFixed(2)}
+            </p>
+          </div>
+        ))}
       </div>
       )}
     </div>
@@ -97,6 +101,5 @@ export default function Products() {
         
         
         */
-       
 
-  
+

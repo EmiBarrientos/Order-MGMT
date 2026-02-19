@@ -33,7 +33,7 @@ export default function Orders() {
 
   
   return (
-    <div className="text-white">
+    <div className="p-6 text-white">
       <h1 className="text-2xl font-bold mb-4">Órdenes</h1>
 
         <button
@@ -116,7 +116,7 @@ if (loading) {
 
 
  * 
- * 
+ * no tengo ni idea de que hice aca jojojo
  * 
  * 
 */
