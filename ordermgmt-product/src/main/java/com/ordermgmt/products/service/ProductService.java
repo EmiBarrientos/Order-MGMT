@@ -4,6 +4,8 @@ import com.ordermgmt.products.dto.ProductDto;
 import com.ordermgmt.products.entity.Product;
 import com.ordermgmt.products.repository.IProductRepository;
 import org.springframework.stereotype.Service;
+
+
 import java.util.List;
 
 
@@ -21,15 +23,17 @@ public class ProductService implements IProductService{
 
     @Override
     public void saveProduct(ProductDto productDto) {
-        Product product=new Product();
 
-        product.setId(product.getId());
-        product.setProductName(productDto.getProductName());
-        product.setPrice(productDto.getPrice());
-        product.setStock(productDto.getStock());
+        if (iProductRepository.existsByProductName(productDto.getProductName())) {
+            throw new IllegalStateException("Product name already exists");
+        }
 
-        iProductRepository.save(product);
-
+            Product product=new Product();
+            product.setId(productDto.getId());
+            product.setProductName(productDto.getProductName());
+            product.setPrice(productDto.getPrice());
+            product.setStock(productDto.getStock());
+            iProductRepository.save(product);
     }
 
     @Override

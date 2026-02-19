@@ -1,6 +1,7 @@
 package com.ordermgmt.products.controller;
 import com.ordermgmt.products.dto.ProductDto;
 import com.ordermgmt.products.service.ProductService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Collections;
 import java.util.List;
 
-@CrossOrigin(origins = "http://localhost:5173")
+
 @RequestMapping("/api/product")
 @RequiredArgsConstructor
 @RestController
@@ -25,7 +26,7 @@ public class ProductController {
 
 
     @PostMapping("/save")
-    public ResponseEntity<ProductDto> saveProduct(@RequestBody ProductDto productDto){
+    public ResponseEntity<ProductDto> saveProduct(@Valid @RequestBody ProductDto productDto){
         productService.saveProduct(productDto);
         return ResponseEntity.ok(productDto);
     }
