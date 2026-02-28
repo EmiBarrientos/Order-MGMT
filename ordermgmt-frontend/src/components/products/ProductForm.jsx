@@ -1,14 +1,27 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { createProduct } from "../../services/products";
 
-export default function CreateProductForm({ onProductCreated, onCancel }) {
+export default function CreateProductForm({
+    mode, 
+    product, 
+    onProductCreated,
+    onCancel 
+    }) {
+
     const [formData, setFormData] = useState({
         productName: "",
         stock: "",
         price: "",
-    });
+    }); 
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+
+    useEffect(() => {
+        if (mode === "edit" && product) {
+            setFormData(product);
+        }
+    }, [mode, product]);
+
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -29,11 +42,35 @@ export default function CreateProductForm({ onProductCreated, onCancel }) {
             ...formData,
             stock: Number(formData.stock),
             price: Number(formData.price),
-        };
+            };
+    
             await createProduct(payload);
+             console.log(payload)
             onProductCreated();
+            console.log("desdpues del onprod")
+             console.log(payload)
+                 console.log(onProductCreated)
+            if(mode==="create" && onProductCreated){
+                console.log("entre al create")
+                alert("producto agregado exitosamente");
+            }
+         console.log("entre al create 45")
+            if(mode==="edit" && onProductCreated){
+                console.log("entre al edit")
+                alert("producto editado exitosamente");
+            }
+
+        
+            
+            
+        
         } catch (err) {
-            setError("Error al crear el producto: " + err.message);
+            if(mode === "edit"){
+                setError("Error al editar el producto: " + err.message);    
+            }else{
+                 setError("Error al agregar el producto: " + err.message);
+            }
+           
         } finally {
             setLoading(false);
         }
@@ -41,17 +78,18 @@ export default function CreateProductForm({ onProductCreated, onCancel }) {
 
     return (
         <div className="bg-white p-6 rounded-lg shadow-lg border border-gray-200 mt-4">
-            <h3 className="text-xl font-bold mb-4">Agregar Nuevo Producto</h3>
+            <h3 className="text-xl font-bold mb-4 text-black "> {mode=== "create" ? "Agregar Nuevo Producto"  : "Editar producto"}</h3>
             <form onSubmit={handleSubmit} className="space-y-4">
+                
                 <div>
-                    <label className="block text-sm font-medium text-gray-700 text-black bg-white">Nombre del Producto</label>
+                    <label className="block text-sm font-medium text-black bg-white">Nombre del Producto</label>
                     <input
                         type="text"
                         name="productName"
                         value={formData.productName}
                         onChange={handleChange}
                         required
-                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 text-black"
+                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 bg-white text-black"
                     />
                 </div>
                 <div className="grid grid-cols-2 gap-4">
@@ -86,7 +124,7 @@ export default function CreateProductForm({ onProductCreated, onCancel }) {
                     <button
                         type="button"
                         onClick={onCancel}
-                        className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md text-black"
+                        className="px-4 py-2 text-sm font-medium  bg-gray-100 hover:bg-gray-200 rounded-md text-black"
                     >
                         Cancelar
                     </button>
@@ -95,7 +133,7 @@ export default function CreateProductForm({ onProductCreated, onCancel }) {
                         disabled={loading}
                         className="px-4 py-2 text-sm font-medium text-white bg-green-600 hover:bg-green-700 rounded-md disabled:opacity-50"
                     >
-                        {loading ? "Guardando..." : "Guardar Producto"}
+                        {loading ? "Guardando..." : mode === "edit" ? "Guardar cambios" : "Guardar Producto"}
                     </button>
                 </div>
             </form>

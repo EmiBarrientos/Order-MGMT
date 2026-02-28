@@ -1,5 +1,8 @@
 import { useState } from "react";
-import CreateProductForm from "./CreateProductForm";
+import CreateProductForm from "./ProductForm";
+
+
+
 
 export default function ProductActions({
   visible,
@@ -7,12 +10,12 @@ export default function ProductActions({
   onToggle,
   onForceReload
 }) {
-  const [showForm, setShowForm] = useState(false);
+ 
+  const [formMode, setFormMode] = useState(null); // null | "create" | "edit"
 
-  const handleProductCreated = () => {
-    setShowForm(false);
-    onForceReload();
-  };
+        
+
+ 
 
   return (
     <div className="flex flex-col gap-4">
@@ -26,28 +29,64 @@ export default function ProductActions({
         </button>
 
         <button
-          onClick={() => setShowForm(!showForm)}
+          type="button"
+          onClick={() => setFormMode("create")}
           className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded shadow"
-        >
-          {showForm ? "Cancelar registro" : "Nuevo Producto"}
+        > Nuevo Producto
+          
         </button>
+         {formMode &&(
+           <div className="fixed inset-0 bg-white/30 backdrop-blur-sm bg-opacity-50 flex items-center justify-center z-50"
+               onClick={(e) => {
+                  if (e.target === e.currentTarget) {
+                    setFormMode(null);
+                  }
+                 }}
+          > 
+            <CreateProductForm
+              mode={formMode}
+              onProductCreated={() => {
+                        setFormMode(null);              
+                        loadOrders();
+                      }}
+            
+              onCancel={() => {
+                        setFormMode(null);        
+                      }}
+            
+            />
 
+          </div>  
+         )}
+
+
+      
         <button
           onClick={onForceReload}
           className="bg-gray-200 hover:bg-gray-300 text-gray-800 px-3 py-2 rounded"
         >
-          Forzar recarga
+           Recargar
         </button>
 
         {loading && <span className="text-sm text-gray-300 ml-2">Cargando...</span>}
       </div>
 
-      {showForm && (
-        <CreateProductForm
-          onProductCreated={handleProductCreated}
-          onCancel={() => setShowForm(false)}
-        />
-      )}
+      
     </div>
   );
 }
+
+
+/*
+
+
+lo dejo aca porque no se usaba pero no se por ahi lo necesite despues xd
+
+const handleProductCreated = () => {
+      setFormMode(null);
+    onForceReload();
+  };
+
+
+
+*/

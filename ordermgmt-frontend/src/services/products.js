@@ -7,3 +7,7 @@ export function getAllProducts() {
 export function createProduct(product) {
   return apiPost("/api/product/save", product);
 }
+
+export function updateProduct( id, product) {
+  return apiPost("/api/product/", id, product);
+}

@@ -1,6 +1,7 @@
 package com.ordermgmt.products.dto;
 import jakarta.validation.constraints.*;
 import lombok.*;
+import java.math.BigDecimal;
 
 @ToString
 @Getter
@@ -13,7 +14,7 @@ public class ProductDto {
     @NotBlank(message = "Product name is required")
     private String productName;
     @PositiveOrZero(message = "Stock must be zero or greater")
-    private Double stock;
+    private Integer stock;
     @Positive(message = "Price must be greater than 0")
-    private Double price;
+    private BigDecimal price;
 }
