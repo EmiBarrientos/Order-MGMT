@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 
 @RequestMapping("/api/product")
@@ -34,7 +35,7 @@ public class ProductController {
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> deleteProduct(@PathVariable Integer id){
         productService.deleteProduct(id);
-        return ResponseEntity.ok("Product Deleted Successfully");
+        return ResponseEntity.ok(Map.of("message", "Product Deleted Successfully"));
     }
 
     @GetMapping("/findall")
@@ -47,7 +48,7 @@ public class ProductController {
     @PutMapping("/update/{id}")
     public ResponseEntity<?> updateProduct(@PathVariable Integer id, @RequestBody ProductDto productDto){
         productService.updateProduct(id, productDto);
-        return ResponseEntity.ok("Product Updated Successfully");
+        return ResponseEntity.ok(Map.of("message", "Product Updated Successfully"));
     }
 
     @PostMapping("/find-by-ids")

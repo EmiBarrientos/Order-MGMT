@@ -1,5 +1,8 @@
 import { useState, useEffect } from "react";
-import { createProduct } from "../../services/products";
+import { createProduct, updateProduct } from "../../services/products";
+import {  toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 export default function CreateProductForm({
     mode, 
@@ -15,6 +18,8 @@ export default function CreateProductForm({
     }); 
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+   
+
 
     useEffect(() => {
         if (mode === "edit" && product) {
@@ -44,26 +49,17 @@ export default function CreateProductForm({
             price: Number(formData.price),
             };
     
-            await createProduct(payload);
-             console.log(payload)
-            onProductCreated();
-            console.log("desdpues del onprod")
-             console.log(payload)
-                 console.log(onProductCreated)
-            if(mode==="create" && onProductCreated){
-                console.log("entre al create")
-                alert("producto agregado exitosamente");
-            }
-         console.log("entre al create 45")
-            if(mode==="edit" && onProductCreated){
-                console.log("entre al edit")
-                alert("producto editado exitosamente");
-            }
+            if(mode ==="create"){
+                await createProduct(payload);   
+                toast.success("Producto creado correctamente");
+            }else{
+                await updateProduct(product.id, payload);
+                toast.success("Producto editado correctamente");
+             }
 
-        
-            
-            
-        
+       
+            onProductCreated();
+          
         } catch (err) {
             if(mode === "edit"){
                 setError("Error al editar el producto: " + err.message);    

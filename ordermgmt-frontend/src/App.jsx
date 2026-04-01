@@ -1,8 +1,10 @@
 import { Outlet, Link } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
 
 export default function App() {
   return (
     <div className="min-h-screen bg-slate-900 text-white">
+      <ToastContainer />
       <nav className="p-4 flex gap-4 bg-slate-800">
         <Link to="/" className="hover:underline">Home</Link>
         <Link to="/products" className="hover:underline">Productos</Link>
@@ -12,6 +14,7 @@ export default function App() {
       <div className="p-4">
         <Outlet />
       </div>
+      
     </div>
   );
 }

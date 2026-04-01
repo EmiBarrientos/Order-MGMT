@@ -1,0 +1,164 @@
+services:
+  # 🐬 MySQL
+  mysql:
+    image: mysql
+    container_name: mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_DATABASE=${PRODUCT_DB_NAME}
+      - MYSQL_USER=${MYSQL_USERNAME}
+    volumes:
+      - mysql_data:/var/lib/mysql
+    ports:
+      - "3307:3306"
+    restart: always
+    networks:
+      - order-mgmt-network
+
+  # 🐘 PostgreSQL
+  postgres:
+    image: postgres
+    container_name: postgres
+    environment:
+      - POSTGRES_PASSWORD=${POSTGRESQL_PASSWORD}
+      - POSTGRES_DB=${ORDERS_DB_NAME}
+      - POSTGRES_USER=${POSTGRESQL_USERNAME}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    restart: always
+    networks:
+      - order-mgmt-network
+  # Config server
+  ordermgmt-config:
+    build:
+      context: .
+      dockerfile: ./ordermgmt-config/Dockerfile
+    container_name: ordermgmt-config
+    ports:
+      - "${CONFIG_SERVER_PORT}:8888"
+    networks:
+      - order-mgmt-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://ordermgmt-config:${CONFIG_SERVER_PORT}/actuator/health"]
+      interval: 20s
+      timeout: 3s
+      retries: 5
+    restart: on-failure
+
+    # Eureka server
+  ordermgmt-eureka:
+    build:
+      context: .
+      dockerfile: ./ordermgmt-eureka/Dockerfile
+    container_name: ordermgmt-eureka
+    ports:
+      - "${EUREKA_SERVER_PORT}:8761"
+    networks:
+      - order-mgmt-network
+    environment:
+      - SPRING_CONFIG_IMPORT=configserver:http://ordermgmt-config:${CONFIG_SERVER_PORT}
+    depends_on:
+      ordermgmt-config:
+        condition: service_healthy
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8761/actuator/health" ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+    restart: on-failure
+
+#Order_mgmt Product
+  ordermgmt-product:
+    build:
+      context: .
+      dockerfile: ./ordermgmt-product/Dockerfile
+    container_name: ordermgmt-product
+    ports:
+      - "${PRODUCT_MICROSERVICE_PORT}:8090"
+    networks:
+      - order-mgmt-network
+    environment:
+      - SPRING_CONFIG_IMPORT=configserver:http://ordermgmt-config:${CONFIG_SERVER_PORT}
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://ordermgmt-eureka:${EUREKA_SERVER_PORT}/eureka/
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:${MYSQL_PORT}/${PRODUCT_DB_NAME}
+      - SPRING_DATASOURCE_USERNAME=${MYSQL_USERNAME}
+      - SPRING_DATASOURCE_PASSWORD=${MYSQL_PASSWORD}
+    depends_on:
+       ordermgmt-config:
+          condition: service_healthy
+       ordermgmt-eureka:
+          condition: service_healthy
+       mysql:
+         condition: service_started
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://product-service:${PRODUCT_MICROSERVICE_PORT}/actuator/health" ]
+      interval: 20s
+      timeout: 3s
+      retries: 5
+    restart: on-failure
+
+# Order_mgmt Order
+  ordermgmt-order:
+    build:
+      context: .
+      dockerfile: ./ordermgmt-orders/Dockerfile
+    container_name: ordermgmt-order
+    ports:
+      - "${ORDERS_MICROSERVICE_PORT}:8091"
+    networks:
+      - order-mgmt-network
+    environment:
+      - SPRING_CONFIG_IMPORT=configserver:http://ordermgmt-config:${CONFIG_SERVER_PORT}
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://ordermgmt-eureka:${EUREKA_SERVER_PORT}/eureka/
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:${POSTGRESQL_PORT}/${ORDERS_DB_NAME}
+      - SPRING_DATASOURCE_USERNAME=${POSTGRESQL_USERNAME}
+      - SPRING_DATASOURCE_PASSWORD=${POSTGRESQL_PASSWORD}
+    depends_on:
+       ordermgmt-config:
+          condition: service_healthy
+       ordermgmt-eureka:
+          condition: service_healthy
+       postgres:
+         condition: service_started
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://order-service:${ORDERS_MICROSERVICE_PORT}/actuator/health" ]
+      interval: 20s
+      timeout: 3s
+      retries: 5
+    restart: on-failure
+
+#Orders_mgmt API Gateway
+  ordermgmt-api-gateway:
+    build:
+      context: .
+      dockerfile: ./ordermgmt-gateway/Dockerfile
+    container_name: ordermgmt-api-gateway
+    ports:
+      - "${API_GATEWAY_PORT}:8080"
+    networks:
+      - order-mgmt-network
+    environment:
+      - SPRING_CONFIG_IMPORT=configserver:http://ordermgmt-config:${CONFIG_SERVER_PORT}
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://ordermgmt-eureka:${EUREKA_SERVER_PORT}/eureka/
+    depends_on:
+       ordermgmt-config:
+          condition: service_healthy
+       ordermgmt-eureka:
+          condition: service_healthy
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://api-gateway:${API_GATEWAY_PORT}/actuator/health" ]
+      interval: 20s
+      timeout: 3s
+      retries: 5
+    restart: on-failure
+
+networks:
+  order-mgmt-network:
+    driver: bridge
+
+volumes:
+  mysql_data:
+  postgres_data:

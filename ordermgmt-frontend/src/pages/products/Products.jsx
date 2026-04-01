@@ -1,38 +1,75 @@
 import { useState } from "react";
-import { getAllProducts } from "../../services/products";
+import { getAllProducts, deleteProduct } from "../../services/products";
+import Swal from 'sweetalert2';
+import 'react-toastify/dist/ReactToastify.css';
 import ProductActions from "../../components/products/ProductsActions";
 import CreateProductForm from "../../components/products/ProductForm";
 
 
 
+
 export default function Products() {
   const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [visible, setVisible] = useState(false);
   const [formMode, setFormMode] = useState(null); // null | "create" | "edit"
   const [selectedProduct, setSelectedProduct] = useState(null);
 
 
-  const loadOrders = async () => {
-    if (visible) {
-      setVisible(false);
-      return;
-    }
 
-    setVisible(true);
+  const handleDelete = async (id) => {
+     Swal.fire({
+        title: '¿Estás seguro?',
+        text: "¡No podrás revertir esta acción!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Sí, eliminar',
+        cancelButtonText: 'Cancelar'
+        }).then(async (result)=>{
+          if(result.isConfirmed){
+             try {
+              await deleteProduct(id);
+                
+              await fetchData(); // recargar lista
+              Swal.fire(
+                '¡Eliminado!',
+                'El producto ha sido borrado.',
+                'success'
+              );
+            } catch (err) {
+              console.error(err);
+              }
+
+          }
+        })
+       
+  };
+
+  const fetchData = async () => {
     setLoading(true);
     setError(null);
-
-
     try {
       const data = await getAllProducts();
       setProducts(data);
     } catch (err) {
       console.error(err);
-      setError("Error al cargar órdenes");
+      setError("Error al cargar productos");
     } finally {
       setLoading(false);
+    }
+};
+
+
+
+  const loadProducts = async () => {
+    if (visible) {
+      setVisible(false);
+    } else {
+      setVisible(true);
+      await fetchData(); // Solo carga si se va a mostrar
     }
   };
 
@@ -43,11 +80,8 @@ export default function Products() {
         <ProductActions
           visible={visible}
           loading={loading}
-          onToggle={loadOrders}
-          onForceReload={() => {
-            setVisible(false);
-            loadOrders();
-          }}
+          onToggle={loadProducts}
+         
           formMode={formMode}
           setFormMode={setFormMode}
         />
@@ -79,6 +113,13 @@ export default function Products() {
                             }}
                       className="mt-2.5 bg-blue-400 hover:bg-blue-300 text-white px-4 py-2 rounded shadow"
                     > Editar
+                        
+                    </button>
+                    <button
+                        type="button"
+                        onClick={() => {handleDelete(product.id) }}
+                      className="mt-2.5 ml-2 bg-red-700 hover:bg-red-500 text-white px-4 py-2 rounded shadow"
+                    > Eliminar
                         
                     </button>
               </div>
@@ -117,7 +158,7 @@ export default function Products() {
                     onProductCreated={() => {
                       setFormMode(null);
                       setSelectedProduct(null);
-                      loadOrders();
+                      loadProducts();
                     }}
                     onCancel={() => {
                       setFormMode(null);
@@ -169,6 +210,14 @@ export default function Products() {
                 >
         </div>
         
+
+ onForceReload={() => {
+            setVisible(false);
+            loadProducts();
+          }}
+
+
+
         */
 
 

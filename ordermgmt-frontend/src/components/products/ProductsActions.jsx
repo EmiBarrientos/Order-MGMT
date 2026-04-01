@@ -8,7 +8,7 @@ export default function ProductActions({
   visible,
   loading,
   onToggle,
-  onForceReload
+  
 }) {
  
   const [formMode, setFormMode] = useState(null); // null | "create" | "edit"
@@ -47,7 +47,7 @@ export default function ProductActions({
               mode={formMode}
               onProductCreated={() => {
                         setFormMode(null);              
-                        loadOrders();
+                        
                       }}
             
               onCancel={() => {
@@ -61,12 +61,7 @@ export default function ProductActions({
 
 
       
-        <button
-          onClick={onForceReload}
-          className="bg-gray-200 hover:bg-gray-300 text-gray-800 px-3 py-2 rounded"
-        >
-           Recargar
-        </button>
+     
 
         {loading && <span className="text-sm text-gray-300 ml-2">Cargando...</span>}
       </div>
@@ -89,4 +84,11 @@ const handleProductCreated = () => {
 
 
 
+  
+   <button
+          onClick={onForceReload}
+          className="bg-gray-200 hover:bg-gray-300 text-gray-800 px-3 py-2 rounded"
+        >
+           Recargar
+        </button>
 */
