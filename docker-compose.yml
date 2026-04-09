@@ -1,12 +1,12 @@
 services:
   # 🐬 MySQL
   mysql:
-    image: mysql
+    image: mysql:8.0
     container_name: mysql
     environment:
       - MYSQL_ROOT_PASSWORD=${MYSQL_PASSWORD}
       - MYSQL_DATABASE=${PRODUCT_DB_NAME}
-      - MYSQL_USER=${MYSQL_USERNAME}
+
     volumes:
       - mysql_data:/var/lib/mysql
     ports:
@@ -17,7 +17,7 @@ services:
 
   # 🐘 PostgreSQL
   postgres:
-    image: postgres
+    image: postgres:15
     container_name: postgres
     environment:
       - POSTGRES_PASSWORD=${POSTGRESQL_PASSWORD}

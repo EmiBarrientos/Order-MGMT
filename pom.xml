@@ -18,11 +18,11 @@
   <packaging>pom</packaging>
 
   <modules>
-    <module>ordermgmt-gateway</module>
-    <module>ordermgmt-eureka</module>
-    <module>ordermgmt-config</module>
-    <module>ordermgmt-orders</module>
-    <module>ordermgmt-product</module>
+    <module>infraestructure/ordermgmt-gateway</module>
+    <module>infraestructure/ordermgmt-eureka</module>
+    <module>infraestructure/ordermgmt-config</module>
+    <module>domain/ordermgmt-orders</module>
+    <module>domain/ordermgmt-product</module>
   </modules>
 
   <properties>

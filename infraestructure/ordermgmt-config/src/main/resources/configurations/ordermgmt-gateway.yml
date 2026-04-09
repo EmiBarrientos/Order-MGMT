@@ -13,11 +13,11 @@ spring:
             enabled: true
         routes:
           - id: ordermgmt-product
-            uri: lb://ordermgmt-product
+            uri: http://ordermgmt-product:8090
             predicates:
               - Path=/api/product/**
           - id: ordermgmt-orders
-            uri: lb://ordermgmt-orders
+            uri: http://ordermgmt-orders:9090
             predicates:
               - Path=/api/order/**
 
