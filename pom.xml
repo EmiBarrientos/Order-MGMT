@@ -18,9 +18,9 @@
   <packaging>pom</packaging>
 
   <modules>
-    <module>infraestructure/ordermgmt-gateway</module>
-    <module>infraestructure/ordermgmt-eureka</module>
-    <module>infraestructure/ordermgmt-config</module>
+    <module>infrastructure/ordermgmt-gateway</module>
+    <module>infrastructure/ordermgmt-eureka</module>
+    <module>infrastructure/ordermgmt-config</module>
     <module>domain/ordermgmt-orders</module>
     <module>domain/ordermgmt-product</module>
   </modules>

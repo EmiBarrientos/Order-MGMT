@@ -37,18 +37,17 @@ public class ProductService implements IProductService{
     }
 
     @Override
-    public void deleteProduct(Integer id) {
+    public void deleteProduct(Long id) {
         iProductRepository.deleteById(id);
 
     }
 
     @Override
-    public void updateProduct(Integer id, ProductDto productDto) {
+    public void updateProduct(Long id, ProductDto productDto) {
         Product product=iProductRepository.findById(id).orElse(null);
-        if(product!=null){
+        if(product!=null) {
             product.setProductName(productDto.getProductName());
             product.setStock(productDto.getStock());
-            product.setId(productDto.getId());
             product.setPrice(productDto.getPrice());
             iProductRepository.save(product);
 
@@ -71,7 +70,7 @@ public class ProductService implements IProductService{
     }
 
     @Override
-    public ProductDto getProductById(Integer id) {
+    public ProductDto getProductById(Long id) {
         Product product=iProductRepository.findById(id).orElse(null);
 
         ProductDto productDto=ProductDto.builder()
@@ -86,7 +85,7 @@ public class ProductService implements IProductService{
 
 
     public List<ProductDto> findByIds(List<Long> ids) {
-        List<Product> products = iProductRepository.findByIdIn(ids); // JPA: SELECT ... WHERE id IN (...)
+        List<Product> products = iProductRepository.findByIdIn(ids);
 
         return products.stream()
                 .map(this::toDto)

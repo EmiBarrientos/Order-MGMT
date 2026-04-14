@@ -34,7 +34,7 @@ services:
   ordermgmt-config:
     build:
       context: .
-      dockerfile: ./ordermgmt-config/Dockerfile
+      dockerfile: infrastructure/ordermgmt-config/Dockerfile
     container_name: ordermgmt-config
     ports:
       - "${CONFIG_SERVER_PORT}:8888"
@@ -51,7 +51,7 @@ services:
   ordermgmt-eureka:
     build:
       context: .
-      dockerfile: ./ordermgmt-eureka/Dockerfile
+      dockerfile: infrastructure/ordermgmt-eureka/Dockerfile
     container_name: ordermgmt-eureka
     ports:
       - "${EUREKA_SERVER_PORT}:8761"
@@ -74,7 +74,7 @@ services:
   ordermgmt-product:
     build:
       context: .
-      dockerfile: ./ordermgmt-product/Dockerfile
+      dockerfile: ./domain/ordermgmt-product/Dockerfile
     container_name: ordermgmt-product
     ports:
       - "${PRODUCT_MICROSERVICE_PORT}:8090"
@@ -104,7 +104,7 @@ services:
   ordermgmt-order:
     build:
       context: .
-      dockerfile: ./ordermgmt-orders/Dockerfile
+      dockerfile: ./domain/ordermgmt-orders/Dockerfile
     container_name: ordermgmt-order
     ports:
       - "${ORDERS_MICROSERVICE_PORT}:8091"
@@ -134,7 +134,7 @@ services:
   ordermgmt-api-gateway:
     build:
       context: .
-      dockerfile: ./ordermgmt-gateway/Dockerfile
+      dockerfile: infrastructure/ordermgmt-gateway/Dockerfile
     container_name: ordermgmt-api-gateway
     ports:
       - "${API_GATEWAY_PORT}:8080"

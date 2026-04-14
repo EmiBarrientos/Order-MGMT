@@ -8,16 +8,15 @@ COPY pom.xml .
 # 2. Copiamos las carpetas nuevas respetando la estructura
 COPY infrastructure/ infrastructure/
 COPY domain/ domain/
-
-RUN mvn clean package -DskipTests -pl domain/ordermgmt-orders -am
+RUN mvn clean package -DskipTests -pl infrastructure/ordermgmt-eureka -am
 
 # Runtime
 FROM eclipse-temurin:17-jre-alpine
 RUN apk add --no-cache curl bash
 WORKDIR /app
 
-COPY --from=build /app/domain/ordermgmt-orders/target/*.jar app.jar
+COPY --from=build /app/infrastructure/ordermgmt-eureka/target/*.jar app.jar
 
-EXPOSE 9090
+EXPOSE 8761
 
 ENTRYPOINT ["java", "-jar", "app.jar"]

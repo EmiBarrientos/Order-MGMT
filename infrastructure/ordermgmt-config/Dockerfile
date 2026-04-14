@@ -9,15 +9,15 @@ COPY pom.xml .
 COPY infrastructure/ infrastructure/
 COPY domain/ domain/
 
-RUN mvn clean package -DskipTests -pl domain/ordermgmt-orders -am
+RUN mvn clean package -DskipTests -pl infrastructure/ordermgmt-config -am
 
 # Runtime
 FROM eclipse-temurin:17-jre-alpine
 RUN apk add --no-cache curl bash
 WORKDIR /app
 
-COPY --from=build /app/domain/ordermgmt-orders/target/*.jar app.jar
+COPY --from=build /app/infrastructure/ordermgmt-config/target/*.jar app.jar
 
-EXPOSE 9090
+EXPOSE 8888
 
 ENTRYPOINT ["java", "-jar", "app.jar"]

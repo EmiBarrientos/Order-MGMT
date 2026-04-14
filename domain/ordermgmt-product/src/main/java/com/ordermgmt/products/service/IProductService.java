@@ -7,10 +7,10 @@ import java.util.List;
 
 public interface IProductService {
     void saveProduct(ProductDto productDto);
-    void deleteProduct(Integer id);
-    void updateProduct(Integer id, ProductDto productDto);
+    void deleteProduct(Long id);
+    void updateProduct(Long id, ProductDto productDto);
     List<ProductDto> getProducts();
-    ProductDto getProductById(Integer id);
+    ProductDto getProductById(Long id);
     List<ProductDto> findByIds(List<Long> ids);
 
 }

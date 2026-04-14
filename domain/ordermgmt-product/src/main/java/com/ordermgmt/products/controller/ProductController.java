@@ -19,41 +19,40 @@ public class ProductController {
 
     private final ProductService productService;
 
-    @GetMapping("/find/{id}")
-    public ResponseEntity<ProductDto> findById(@PathVariable Integer id){
+    @GetMapping("{id}")
+    public ResponseEntity<ProductDto> findById(@PathVariable Long id){
         ProductDto productDto=productService.getProductById(id);
         return ResponseEntity.ok(productDto);
     }
 
 
-    @PostMapping("/save")
+    @PostMapping
     public ResponseEntity<ProductDto> saveProduct(@Valid @RequestBody ProductDto productDto){
         productService.saveProduct(productDto);
         return ResponseEntity.ok(productDto);
     }
 
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<?> deleteProduct(@PathVariable Integer id){
+    @DeleteMapping("{id}")
+    public ResponseEntity<?> deleteProduct(@PathVariable Long id){
         productService.deleteProduct(id);
         return ResponseEntity.ok(Map.of("message", "Product Deleted Successfully"));
     }
 
-    @GetMapping("/findall")
+    @GetMapping
     public ResponseEntity<List<ProductDto>> findAllProducts(){
         List<ProductDto> productDtoList=productService.getProducts();
         return ResponseEntity.ok(productDtoList);
     }
 
 
-    @PutMapping("/update/{id}")
-    public ResponseEntity<?> updateProduct(@PathVariable Integer id, @RequestBody ProductDto productDto){
+    @PutMapping("{id}")
+    public ResponseEntity<?> updateProduct(@PathVariable Long id, @RequestBody ProductDto productDto){
         productService.updateProduct(id, productDto);
         return ResponseEntity.ok(Map.of("message", "Product Updated Successfully"));
     }
 
-    @PostMapping("/find-by-ids")
+    @PostMapping("/search")
      public ResponseEntity<List<ProductDto>> getProductsByIds(@RequestBody List<Long> ids) {
-        System.out.println("Lista completa: " +ids);
           if (ids == null || ids.isEmpty()) {
               return ResponseEntity.ok(Collections.emptyList());
           }
@@ -62,7 +61,7 @@ public class ProductController {
               return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE).build();
           }
           List<ProductDto> result = productService.findByIds(ids);
-        System.out.println("Lista completa result: " +result.toString());
+
           return ResponseEntity.ok(result);
       }
 
