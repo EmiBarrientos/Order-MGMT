@@ -2,6 +2,7 @@ package com.ordermgmt.products.service;
 
 import com.ordermgmt.products.dto.ProductDto;
 import com.ordermgmt.products.entity.Product;
+import com.ordermgmt.products.exceptions.ProductNotFoundException;
 import com.ordermgmt.products.repository.IProductRepository;
 import org.springframework.stereotype.Service;
 
@@ -44,14 +45,12 @@ public class ProductService implements IProductService{
 
     @Override
     public void updateProduct(Long id, ProductDto productDto) {
-        Product product=iProductRepository.findById(id).orElse(null);
-        if(product!=null) {
-            product.setProductName(productDto.getProductName());
-            product.setStock(productDto.getStock());
-            product.setPrice(productDto.getPrice());
-            iProductRepository.save(product);
+        Product product=iProductRepository.findById(id).orElseThrow(()-> new ProductNotFoundException("Product with id "+id+" not found"));
+        product.setProductName(productDto.getProductName());
+        product.setStock(productDto.getStock());
+        product.setPrice(productDto.getPrice());
+        iProductRepository.save(product);
 
-        }
     }
 
     @Override
@@ -71,7 +70,7 @@ public class ProductService implements IProductService{
 
     @Override
     public ProductDto getProductById(Long id) {
-        Product product=iProductRepository.findById(id).orElse(null);
+        Product product=iProductRepository.findById(id).orElseThrow(()-> new ProductNotFoundException("Product with id "+id+" not found"));
 
         ProductDto productDto=ProductDto.builder()
                 .productName(product.getProductName())

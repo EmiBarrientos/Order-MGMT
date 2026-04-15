@@ -58,7 +58,7 @@ public class ProductController {
           }
 
           if (ids.size() > 1000) {
-              return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE).build();
+             throw new IllegalArgumentException("Too many IDs. Maximum allowed is 1000.");
           }
           List<ProductDto> result = productService.findByIds(ids);
 

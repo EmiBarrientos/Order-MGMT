@@ -1,6 +1,7 @@
 package com.ordermgmt.products.controller;
 
 import com.ordermgmt.products.dto.ProductDto;
+import com.ordermgmt.products.exceptions.ProductNotFoundException;
 import com.ordermgmt.products.service.ProductService;
 import org.junit.jupiter.api.Test;
 
@@ -10,7 +11,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.web.servlet.MockMvc;
-import org.testcontainers.shaded.com.fasterxml.jackson.databind.ObjectMapper;
+
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -24,6 +25,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 
 
@@ -165,6 +167,17 @@ class ProductControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(ids)))
                 .andExpect(status().isPayloadTooLarge());
+    }
+
+    @Test
+    void shouldReturn404_whenProductNotFound() throws Exception {
+
+        when(productService.getProductById(1L))
+                .thenThrow(new ProductNotFoundException("Product not found"));
+
+        mockMvc.perform(get("/api/product/1"))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.error").value("NOT_FOUND"));
     }
 
 }
