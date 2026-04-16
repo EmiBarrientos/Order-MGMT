@@ -39,4 +39,12 @@ public class GlobalExceptionHandler {
                         "message", ex.getMessage()
                 ));
     }
+    @ExceptionHandler(PayloadTooLargeException.class)
+    public ResponseEntity<?> handlePayloadTooLarge(PayloadTooLargeException ex) {
+        return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE)
+                .body(Map.of(
+                        "error", "PAYLOAD_TOO_LARGE",
+                        "message", ex.getMessage()
+                ));
+    }
 }

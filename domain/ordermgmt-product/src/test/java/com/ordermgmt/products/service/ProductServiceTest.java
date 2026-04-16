@@ -2,6 +2,7 @@ package com.ordermgmt.products.service;
 
 import com.ordermgmt.products.dto.ProductDto;
 import com.ordermgmt.products.entity.Product;
+import com.ordermgmt.products.exceptions.ProductNotFoundException;
 import com.ordermgmt.products.repository.IProductRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -64,15 +65,28 @@ class ProductServiceTest {
 
     @Test
     void shouldDeleteProductById() {
+        Long id = 1L;
+
+        when(iProductRepository.existsById(id)).thenReturn(true);
+
+        productService.deleteProduct(id);
+
+        verify(iProductRepository).deleteById(id);
+    }
+
+    @Test
+    void shouldThrowException_whenDeletingNonExistingProduct() {
         // Arrange
         Long id = 1L;
-        // Act
-        productService.deleteProduct(id);
-        // Assert
-        verify(iProductRepository).deleteById(id);
-        if (!iProductRepository.existsById(id)) {
-            throw new RuntimeException("Product not found");
-        }
+
+        when(iProductRepository.existsById(id)).thenReturn(false);
+
+        // Act + Assert
+        assertThrows(ProductNotFoundException.class, () -> {
+            productService.deleteProduct(id);
+        });
+
+        verify(iProductRepository, never()).deleteById(any());
     }
 
     @Test
@@ -103,23 +117,24 @@ class ProductServiceTest {
         Product updated = captor.getValue();
 
         assertEquals("Nuevo", updated.getProductName());
-        assertEquals(100.0, updated.getPrice());
+        assertEquals(BigDecimal.valueOf(100.0), updated.getPrice());
         assertEquals(10, updated.getStock());
     }
 
 
     @Test
-    void shouldDoNothing_whenProductDoesNotExist() {
+    void shouldThrowException_whenProductDoesNotExist() {
         // Arrange
         Long id = 1L;
         ProductDto dto = new ProductDto();
 
         when(iProductRepository.findById(id)).thenReturn(Optional.empty());
 
-        // Act
-        productService.updateProduct(id, dto);
+        // Act + Assert
+        assertThrows(ProductNotFoundException.class, () -> {
+            productService.updateProduct(id, dto);
+        });
 
-        // Assert
         verify(iProductRepository, never()).save(any());
     }
 
@@ -143,7 +158,7 @@ class ProductServiceTest {
         // Assert
         assertNotNull(result);
         assertEquals("Mouse", result.getProductName());
-        assertEquals(100.0, result.getPrice());
+        assertEquals(BigDecimal.valueOf(100.0), result.getPrice());
         assertEquals(10, result.getStock());
         assertEquals(id, result.getId());
     }
@@ -156,7 +171,7 @@ class ProductServiceTest {
         when(iProductRepository.findById(id)).thenReturn(Optional.empty());
 
         // Act + Assert
-        assertThrows(NullPointerException.class, () -> {
+        assertThrows(ProductNotFoundException.class, () -> {
             productService.getProductById(id);
         });
     }

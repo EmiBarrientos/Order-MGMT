@@ -1,5 +1,6 @@
 package com.ordermgmt.products.controller;
 import com.ordermgmt.products.dto.ProductDto;
+import com.ordermgmt.products.exceptions.PayloadTooLargeException;
 import com.ordermgmt.products.service.ProductService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -58,7 +59,7 @@ public class ProductController {
           }
 
           if (ids.size() > 1000) {
-             throw new IllegalArgumentException("Too many IDs. Maximum allowed is 1000.");
+              throw new PayloadTooLargeException("Too many IDs");
           }
           List<ProductDto> result = productService.findByIds(ids);
 
