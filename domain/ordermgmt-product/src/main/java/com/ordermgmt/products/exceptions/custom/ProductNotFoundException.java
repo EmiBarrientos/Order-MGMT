@@ -1,4 +1,4 @@
-package com.ordermgmt.products.exceptions;
+package com.ordermgmt.products.exceptions.custom;
 
 public class ProductNotFoundException extends RuntimeException
 {

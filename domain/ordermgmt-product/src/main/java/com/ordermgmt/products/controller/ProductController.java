@@ -1,10 +1,9 @@
 package com.ordermgmt.products.controller;
 import com.ordermgmt.products.dto.ProductDto;
-import com.ordermgmt.products.exceptions.PayloadTooLargeException;
+import com.ordermgmt.products.exceptions.custom.PayloadTooLargeException;
 import com.ordermgmt.products.service.ProductService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

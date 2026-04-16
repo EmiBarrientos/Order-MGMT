@@ -2,7 +2,7 @@ package com.ordermgmt.products.service;
 
 import com.ordermgmt.products.dto.ProductDto;
 import com.ordermgmt.products.entity.Product;
-import com.ordermgmt.products.exceptions.ProductNotFoundException;
+import com.ordermgmt.products.exceptions.custom.ProductNotFoundException;
 import com.ordermgmt.products.repository.IProductRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

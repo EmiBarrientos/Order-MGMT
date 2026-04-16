@@ -1,7 +1,7 @@
 package com.ordermgmt.products.controller;
 
 import com.ordermgmt.products.dto.ProductDto;
-import com.ordermgmt.products.exceptions.ProductNotFoundException;
+import com.ordermgmt.products.exceptions.custom.ProductNotFoundException;
 import com.ordermgmt.products.service.ProductService;
 import org.junit.jupiter.api.Test;
 
