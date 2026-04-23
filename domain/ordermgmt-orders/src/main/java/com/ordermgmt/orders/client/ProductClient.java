@@ -6,17 +6,14 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@FeignClient(name= "ordermgmt-product", url="localhost:8080/api/product")
+@FeignClient(name = "ordermgmt-product")
 public interface ProductClient {
-    @GetMapping("/find/{id}")
-    ProductDto findProductById(@PathVariable Integer id);
 
-    @PostMapping("/find-by-ids")
+    @GetMapping("/api/product/find/{id}")
+    ProductDto findProductById(@PathVariable Long id);
+
+    @PostMapping("/api/product/search")
     List<ProductDto> getProductsByIds(@RequestBody List<Long> ids);
-
-
-
-
 }
 
 

@@ -5,6 +5,8 @@ import com.ordermgmt.orders.dto.OrderDto;
 import com.ordermgmt.orders.dto.OrderOutputDto;
 import com.ordermgmt.orders.dto.ProductDto;
 import com.ordermgmt.orders.entity.Order;
+import com.ordermgmt.orders.exceptions.custom.ExternalServiceException;
+import com.ordermgmt.orders.exceptions.custom.OrderNotFoundException;
 import com.ordermgmt.orders.https.response.ProductByIdResponse;
 import com.ordermgmt.orders.repository.IOrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,26 +43,28 @@ public class OrderService implements IOrderService{
     }
 
     @Override
-    public void updateOrder(OrderDto orderDto, Integer id) {
-        Order order=iOrderRepository.findById(id).orElse(null);
-        if(order!=null){
+    public void updateOrder(OrderDto orderDto, Long id) {
+        Order order=iOrderRepository.findById(id).orElseThrow(()->new OrderNotFoundException(id));
+
             order.setIdProducto(orderDto.getIdProducto());
             order.setEstadoPedido(orderDto.getEstadoPedido());
             order.setUserId(orderDto.getUserId());
             order.setId(orderDto.getId());
             iOrderRepository.save(order);
-        }
-
     }
 
     @Override
-    public void deleteOrder(Integer id) {
+    public void deleteOrder(Long id) {
+        if (!iOrderRepository.existsById(id)) {
+            throw new OrderNotFoundException(id);
+        }
         iOrderRepository.deleteById(id);
     }
 
     @Override
-    public OrderDto getOrderByid(Integer id) {
-       Order order=iOrderRepository.findById(id).orElse(null);
+    public OrderDto getOrderByid(Long id) {
+       Order order=iOrderRepository.findById(id).orElseThrow(()->new OrderNotFoundException(id));
+
        OrderDto orderDto= OrderDto.builder()
                .idProducto(order.getIdProducto())
                .userId(order.getUserId())
@@ -87,15 +91,23 @@ public class OrderService implements IOrderService{
     }
 
     @Override
-    public ProductByIdResponse findProductById(Integer productId) {
+    public ProductByIdResponse findProductById(Long productId) {
 
-        ProductDto productDto=productClient.findProductById(productId);
+        try{
+            ProductDto productDto=productClient.findProductById(productId);
 
-        return ProductByIdResponse.builder()
-                .Price(productDto.getPrice())
-                .productName(productDto.getProductName())
-                .stock(productDto.getStock())
-                .build();
+            if (productDto == null) {
+                throw new ExternalServiceException("Product service returned null for id: " + productId);
+            }
+
+            return ProductByIdResponse.builder()
+                    .Price(productDto.getPrice())
+                    .productName(productDto.getProductName())
+                    .stock(productDto.getStock())
+                    .build();
+        }catch(ExternalServiceException e){
+            throw new ExternalServiceException("Error calling product service");
+        }
     }
 
     @Override

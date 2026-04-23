@@ -2,7 +2,7 @@ spring:
   application:
     name: ordermgmt-eureka
   config:
-    import: optional:configserver:http://ordermgmt-config:8888
+    import: optional:configserver:${CONFIG_SERVER_URL}
   cloud:
     config:
       fail-fast: true

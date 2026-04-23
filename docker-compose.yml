@@ -59,6 +59,7 @@ services:
       - order-mgmt-network
     environment:
       - SPRING_CONFIG_IMPORT=configserver:http://ordermgmt-config:${CONFIG_SERVER_PORT}
+      - CONFIG_SERVER_URL=http://ordermgmt-config:8888
     depends_on:
       ordermgmt-config:
         condition: service_healthy

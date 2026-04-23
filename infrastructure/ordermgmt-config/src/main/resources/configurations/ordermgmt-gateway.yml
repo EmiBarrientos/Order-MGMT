@@ -16,8 +16,8 @@ spring:
             uri: http://ordermgmt-product:8090
             predicates:
               - Path=/api/product/**
-          - id: ordermgmt-orders
-            uri: http://ordermgmt-orders:9090
+          - id: ordermgmt-order
+            uri: http://ordermgmt-order:9090
             predicates:
               - Path=/api/order/**
 

@@ -10,15 +10,15 @@ public interface IOrderService {
 
    void saveOrder(OrderDto orderDto);
 
-   void updateOrder(OrderDto orderDto, Integer id);
+   void updateOrder(OrderDto orderDto, Long id);
 
-   void deleteOrder(Integer id);
+   void deleteOrder(Long id);
 
-   OrderDto getOrderByid(Integer id);
+   OrderDto getOrderByid( Long id);
 
    List<OrderDto> getAllOrders();
 
-   ProductByIdResponse findProductById(Integer productId);
+   ProductByIdResponse findProductById(Long productId);
 
    List<OrderOutputDto> getAllWhitProduct();
 }

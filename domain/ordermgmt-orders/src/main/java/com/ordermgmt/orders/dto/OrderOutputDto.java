@@ -10,7 +10,7 @@ import java.util.List;
 @Getter
 @Setter
 public class OrderOutputDto {
-    private int id;
+    private Long id;
     private Long userId;
     private List<ProductDto> productDtoList;
     private EstadoPedido estadoPedido;
