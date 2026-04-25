@@ -105,7 +105,7 @@ public class OrderService implements IOrderService{
                     .productName(productDto.getProductName())
                     .stock(productDto.getStock())
                     .build();
-        }catch(ExternalServiceException e){
+        }catch(Exception e){
             throw new ExternalServiceException("Error calling product service");
         }
     }
