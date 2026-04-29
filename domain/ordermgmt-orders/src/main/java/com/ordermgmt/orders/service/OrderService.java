@@ -49,7 +49,6 @@ public class OrderService implements IOrderService{
             order.setIdProducto(orderDto.getIdProducto());
             order.setEstadoPedido(orderDto.getEstadoPedido());
             order.setUserId(orderDto.getUserId());
-            order.setId(orderDto.getId());
             iOrderRepository.save(order);
     }
 
