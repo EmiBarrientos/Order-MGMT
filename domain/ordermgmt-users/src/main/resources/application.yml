@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: ordermgmt-users
+  config:
+    import: optional:configserver:${CONFIG_SERVER_URL:http://localhost:8888}
+
+server:
+  port: ${USERS_MICROSERVICE_PORT:8092}

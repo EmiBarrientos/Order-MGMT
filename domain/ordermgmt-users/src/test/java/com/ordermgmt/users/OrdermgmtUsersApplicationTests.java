@@ -1,4 +1,4 @@
-package com.ordermgmt_users;
+package com.ordermgmt.users;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

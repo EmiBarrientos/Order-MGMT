@@ -1,4 +1,4 @@
-package com.ordermgmt_users;
+package com.ordermgmt.users;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

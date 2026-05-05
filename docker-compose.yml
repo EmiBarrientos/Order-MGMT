@@ -30,6 +30,25 @@ services:
     restart: always
     networks:
       - order-mgmt-network
+
+  #  🍃 MongoDB
+  mongodb:
+    image: mongo:7.0
+    container_name: mongodb
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_USERNAME}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_PASSWORD}
+      - MONGO_INITDB_DATABASE=${MONGO_DB_NAME}
+    volumes:
+      - mongo_data:/data/db
+    ports:
+      - "27017:27017"
+    restart: always
+    networks:
+      - order-mgmt-network
+
+
+
   # Config server
   ordermgmt-config:
     build:
@@ -156,6 +175,37 @@ services:
       retries: 5
     restart: on-failure
 
+# Order_mgmt Users
+  ordermgmt-users:
+    build:
+      context: .
+      dockerfile: ./domain/ordermgmt-users/Dockerfile
+    container_name: ordermgmt-users
+    ports:
+      - "${USERS_MICROSERVICE_PORT}:8092"
+    networks:
+      - order-mgmt-network
+    environment:
+      - SPRING_CONFIG_IMPORT=configserver:http://ordermgmt-config:${CONFIG_SERVER_PORT}
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://ordermgmt-eureka:${EUREKA_SERVER_PORT}/eureka/
+      - MONGO_URI=mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@mongodb:27017/${MONGO_DB_NAME}?authSource=admin
+      - JWT_SECRET=${JWT_SECRET}
+      - JWT_EXPIRATION=${JWT_EXPIRATION}
+    depends_on:
+      ordermgmt-config:
+        condition: service_healthy
+      ordermgmt-eureka:
+        condition: service_healthy
+      mongodb:
+        condition: service_started
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8092/actuator/health"]
+      interval: 20s
+      timeout: 3s
+      retries: 5
+    restart: on-failure
+
+
 networks:
   order-mgmt-network:
     driver: bridge
@@ -163,3 +213,36 @@ networks:
 volumes:
   mysql_data:
   postgres_data:
+  mongo_data:
+
+
+###
+  # 🔐 Keycloak
+    ### keycloak:
+    ### image: quay.io/keycloak/keycloak:24.0.1
+    ### container_name: keycloak
+    ### command: start-dev
+    ### environment:
+    ###  - KEYCLOAK_ADMIN=${KEYCLOAK_ADMIN_USER}
+    ###  - KEYCLOAK_ADMIN_PASSWORD=${KEYCLOAK_ADMIN_PASSWORD}
+    ###  - KC_DB=postgres
+    ###  - KC_DB_URL=jdbc:postgresql://postgres:5432/${KEYCLOAK_DB_NAME}
+    ###  - KC_DB_USERNAME=${POSTGRESQL_USERNAME}
+    ###  - KC_DB_PASSWORD=${POSTGRESQL_PASSWORD}
+    ###  - KC_HOSTNAME_STRICT=false
+    ### - KC_HTTP_ENABLED=true
+    ### ports:
+    ###  - "${KEYCLOAK_PORT}:8080"
+    ### depends_on:
+    ###  postgres:
+    ###   condition: service_started
+    ###healthcheck:
+    ### test: [ "CMD", "curl", "-f", "http://localhost:8080/health/ready" ]
+    ###  interval: 30s
+    ### timeout: 10s
+    ### retries: 10
+    ### start_period: 60s
+  ###v restart: on-failure
+    ### v###  networks:
+  ### - order-mgmt-network
+  ####
