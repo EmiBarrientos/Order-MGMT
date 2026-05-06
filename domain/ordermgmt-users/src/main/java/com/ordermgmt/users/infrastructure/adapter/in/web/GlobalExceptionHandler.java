@@ -23,12 +23,12 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(UserNotFoundException.class)
     public ResponseEntity<ApiError> handleUserNotFound(UserNotFoundException ex) {
-        return buildResponse(HttpStatus.NOT_FOUND, ex.getMessage(), null);
+        return buildResponse(HttpStatus.UNAUTHORIZED, "Invalid username or password", null);
     }
 
     @ExceptionHandler(InvalidCredentialsException.class)
     public ResponseEntity<ApiError> handleInvalidCredentials(InvalidCredentialsException ex) {
-        return buildResponse(HttpStatus.UNAUTHORIZED, ex.getMessage(), null);
+        return buildResponse(HttpStatus.UNAUTHORIZED, "Invalid username or password", null);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
