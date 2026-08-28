@@ -1,7 +1,7 @@
 spring:
   data:
     mongodb:
-      uri: ${MONGO_URI:mongodb://root:root@localhost:27017/users_db?authSource=admin}
+      uri: ${MONGO_URI}
 
 eureka:
   client:
