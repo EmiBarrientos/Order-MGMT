@@ -4,22 +4,26 @@ server:
 spring:
   application:
     name: ordermgmt-gateway
-
   cloud:
     gateway:
-      mvc:
-        discovery:
-          locator:
-            enabled: true
-        routes:
-          - id: ordermgmt-product
-            uri: http://ordermgmt-product:8090
-            predicates:
-              - Path=/api/product/**
-          - id: ordermgmt-order
-            uri: http://ordermgmt-order:9090
-            predicates:
-              - Path=/api/order/**
+      discovery:
+        locator:
+          enabled: true
+      routes:
+        - id: ordermgmt-users
+          uri: http://ordermgmt-users:8092
+          predicates:
+            - Path=/auth/**
+          filters:
+            - AuthResponse
+        - id: ordermgmt-product
+          uri: http://ordermgmt-product:8090
+          predicates:
+             - Path=/api/product/**
+        - id: ordermgmt-order
+          uri: http://ordermgmt-order:9090
+          predicates:
+            - Path=/api/order/**
 
       # 👇 CORS debe ir ACÁ dentro de spring.cloud.gateway
       globalcors:
