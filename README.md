@@ -1,200 +1,355 @@
-## 📦 Order-MGMT — Microservices Architecture (Spring Cloud)
+# Order MGMT
 
-Sistema de gestión de productos y pedidos construido sobre una arquitectura de microservicios modular, escalable y centralizada.
-Incluye:
-- ✔ Spring Cloud Gateway (MVC)
-- ✔ Eureka Service Discovery
-- ✔ Config Server nativo
-- ✔ Microservicios independientes (Products + Orders)
-- ✔ Configuración centralizada
-- ✔ Comunicación mediante discovery
-- ✔ Rutas dinámicas
-- ✔ Versionado de API
+Microservices-based order management system built with **Java and Spring Boot**, designed to explore distributed systems, service-to-service communication, centralized configuration, API Gateway patterns, authentication, and different architectural approaches.
+
+The project simulates an ecosystem where users can interact with products and create orders through a centralized API Gateway.
+
 ---
 
+## Architecture
+
+The system is composed of several independent services, each responsible for a specific business or infrastructure concern.
+
+```text
+                         ┌─────────────────┐
+                         │     Client      │
+                         └────────┬────────┘
+                                  │
+                                  ▼
+                         ┌─────────────────┐
+                         │   API Gateway   │
+                         │   WebFlux       │
+                         │ Security / JWT  │
+                         └────────┬────────┘
+                                  │
+                    ┌─────────────┼─────────────┐
+                    │             │             │
+                    ▼             ▼             ▼
+             ┌────────────┐ ┌────────────┐ ┌────────────┐
+             │   Users    │ │   Orders   │ │  Products  │
+             │  Service   │ │  Service   │ │  Service   │
+             └─────┬──────┘ └─────┬──────┘ └─────┬──────┘
+                   │              │              │
+                   ▼              ▼              ▼
+                MongoDB       PostgreSQL        MySQL
+
+                    ┌─────────────────────────┐
+                    │      Eureka Server      │
+                    │    Service Discovery    │
+                    └─────────────────────────┘
+
+                    ┌─────────────────────────┐
+                    │      Config Server      │
+                    │ Centralized Configuration│
+                    └─────────────────────────┘
 ```
-🧩 Arquitectura General
-                   ┌──────────────────┐
-                   │  Config Server    │
-                   │  (port 8888)      │
-                   └─────────┬────────┘
-                             │
-                             ▼
-                 Centralized application.yml
-                             │
-     ┌───────────────────────┴────────────────────────┐
-     │                        │                       │
-     ▼                        ▼                       ▼
-┌───────────┐         ┌──────────────┐        ┌──────────────┐
-│  Eureka   │◀────────│  Gateway     │───────▶│ Product-MS    │
-│ 8761      │         │ 8080         │        │ 8090          │
-└───────────┘         └──────────────┘        └──────────────┘
-                                             ┌────────────────┐
-                                             │ Order-MS 9090  │
-                                             └────────────────┘
+
+### Business services
+
+| Service             | Responsibility                     | Database   | Architecture |
+| ------------------- | ---------------------------------- | ---------- | ------------ |
+| **User Service**    | User management and authentication | MongoDB    | Hexagonal    |
+| **Product Service** | Product management                 | MySQL      | MVC          |
+| **Order Service**   | Order creation and management      | PostgreSQL | MVC          |
+
+### Infrastructure services
+
+| Service           | Responsibility                   |
+| ----------------- | -------------------------------- |
+| **API Gateway**   | Routing and centralized security |
+| **Eureka Server** | Service discovery                |
+| **Config Server** | Centralized configuration        |
+
+---
+
+## Tech Stack
+
+### Backend
+
+* Java 17
+* Spring Boot
+* Spring Cloud
+* Spring Web
+* Spring WebFlux
+* Spring Security
+* JWT
+* OpenFeign
+* Spring Data JPA / Hibernate
+* Spring Data MongoDB
+
+### Databases
+
+* PostgreSQL
+* MySQL
+* MongoDB
+
+Each business microservice owns its own database, avoiding direct database access between services.
+
+### Infrastructure & Development
+
+* Docker
+* Docker Compose
+* Eureka
+* Spring Cloud Config Server
+* Maven
+* Git
+
+### Testing
+
+* JUnit 5
+* Mockito
+* MockMvc
+
+---
+
+## Main Features
+
+### Product Management
+
+The Product Service manages the product catalog and exposes endpoints used by both clients and other services.
+
+The service has its own MySQL database and is isolated from the databases of the other microservices.
+
+### Order Management
+
+The Order Service is responsible for creating and managing orders.
+
+When an order is created, the service communicates with the Product Service through **OpenFeign** to validate the requested products before persisting the order.
+
+Orders are persisted independently in PostgreSQL.
+
+### User Management
+
+The User Service manages users and authentication.
+
+Unlike the other business services, it follows a **Hexagonal Architecture** approach, separating domain logic from infrastructure concerns.
+
+```text
+┌─────────────────────────────┐
+│         Infrastructure      │
+│                             │
+│ Controllers / Adapters      │
+│ Security / Configuration    │
+└──────────────┬──────────────┘
+               │
+               ▼
+┌─────────────────────────────┐
+│          Application        │
+│                             │
+│ Application Services        │
+└──────────────┬──────────────┘
+               │
+               ▼
+┌─────────────────────────────┐
+│            Domain           │
+│                             │
+│ Models / Ports / Exceptions │
+└─────────────────────────────┘
 ```
----
-
-| Componentes               | Puerto   | Rol | 
-|---------------------------|----------|---------------------------------------------------------|
-| Config Server             | 8888	   | Centraliza configuraciones para todos los microservicios|
-| Eureka Server	8761	      | 8761     | Registro de servicios / discovery dinámico              |
-| Gateway (MVC)             | 8080     | Entrada única al sistema, rutas dinámicas               |
-| Product-Service           | 8090     |CRUD productos                                           |
-| Order-Service		          | 9090     |CRUD pedidos                                             |
 
 ---
 
+## API Gateway
+
+All external requests enter the system through the API Gateway.
+
+The Gateway is implemented using **Spring Cloud Gateway and WebFlux**, providing a reactive entry point to the microservices ecosystem.
+
+Its current responsibilities include:
+
+* Request routing
+* Service discovery integration
+* Centralized authentication
+* JWT validation
+* Cookie-based authentication
+* Request filtering
+
+The Gateway communicates with services using their logical service names through Eureka instead of relying on hardcoded service addresses.
+
+---
+
+## Authentication
+
+The project currently uses **JWT-based authentication** with Spring Security.
+
+The authentication flow is designed around an HTTP-only cookie containing the JWT.
+
+```text
+Client
+   │
+   │ Login
+   ▼
+User Service
+   │
+   │ JWT
+   ▼
+API Gateway
+   │
+   │ HTTP-only Cookie
+   ▼
+Client
 ```
-## 🚀 Características principales
-1. Configuración Centralizada
 
-Todos los microservicios cargan su configuración desde Config Server a través de:
+For subsequent requests:
 
-spring:
-  config:
-    import: optional:configserver:http://localhost:8888
-
-
-Esto incluye puertos, names, rutas, DB credentials, etc.
-
-2. Service Discovery con Eureka
-
-Cada servicio se auto-registra:
-
-eureka:
-  client:
-    service-url:
-      defaultZone: http://localhost:8761/eureka/
-
-
-Y se accede por su nombre lógico, no por su puerto.
-
-3. API Gateway (Spring Cloud Gateway MVC)
-
-Rutas configuradas en el config repo:
-
-spring:
-  cloud:
-    gateway:
-      routes:
-        - id: product-service
-          uri: lb://product-service
-          predicates:
-            - Path=/api/product/**
-
-        - id: order-service
-          uri: lb://order-service
-          predicates:
-            - Path=/api/order/**
-
-
-Esto permite:
-
-Load balancing automático
-
-Rutas por nombre del servicio
-
-Rewrites si se desean
-
-Aislamiento de puertos internos
-
-4. Microservicios Reales
-
-Cada micro:
-
- ✔ Tiene su propio application.yml centralizado
- ✔ Su propio controller
- ✔ Su propio modelo
- ✔ Su propia capa de persistencia
-
-Endpoints del estilo:
-
-GET  /api/product/find/{id}
-GET  /api/order/find/{id}
-POST /api/order/create
-...
+```text
+Client
+   │
+   │ HTTP-only Cookie
+   ▼
+API Gateway
+   │
+   │ JWT validation
+   ▼
+Microservice
 ```
----
 
-## 🛠️ Tecnologías utilizadas
+The JWT currently contains information used to identify the authenticated user and support role-based access control.
 
-| Tecnología               | Uso principal                                                   |
-|--------------------------|-----------------------------------------------------------------|
-| Java 17 / 21 / 23         | Lenguaje de programación utilizado para construir la aplicación |
-| Spring Boot 3.5.6         | Framework principal para el backend y configuración automática  |
-| Spring Data JPA           | Abstracción para la persistencia de datos con Hibernate         |
-| Eureka                    | Para el registro de los microservicios                          |
-| Gateway                   | para la centralizacion de los puertos                           |
-| Maven                     | Gestión de dependencias y ciclo de vida del proyecto            |
-| MySQL / PostgreSQL        | Bases de datos para el almacenamiento persistente               |
-| Lombok                    | Eliminación de código repetitivo (getters, setters, etc.)       |
-| Actuator                  | monitoreo la aplicación, recopilación de métricas               |
-| Config server             | centralizacion de las configuraciones                           |
+Supported roles currently include:
 
+* `USER`
+* `ADMIN`
 
+> Authentication and authorization are still under active development.
 
 ---
-## 📡 Comportamiento del Sistema
 
-Los servicios levantan sin configuración local.
+## Service-to-Service Communication
 
-Todo viene desde Config Server.
+Business microservices communicate through APIs rather than accessing each other's databases.
 
-Eureka registra servicios automáticamente.
+For example:
 
-El gateway lee Eureka y enruta dinámicamente.
+```text
+Order Service
+      │
+      │ OpenFeign
+      ▼
+Product Service
+      │
+      ▼
+   MySQL
+```
+
+This keeps database ownership isolated and allows each microservice to evolve its persistence layer independently.
 
 ---
-## 🧪 Cómo Probar
-- 1️⃣ Levantar Config Server:
-- mvn spring-boot:run
 
+## Centralized Configuration
 
-- Puerto: 8888
+Configuration is managed through **Spring Cloud Config Server**.
 
-- 2️⃣ Levantar Eureka:
-- mvn spring-boot:run
+The microservices retrieve their configuration from the Config Server during startup.
 
+```text
+             Config Server
+                  │
+        ┌─────────┼─────────┐
+        ▼         ▼         ▼
+      Users     Orders    Products
+```
 
-- Puerto: 8761
+This centralizes environment-specific configuration and avoids duplicating configuration across individual services.
 
-- Abrir en navegador:
-
-- http://localhost:8761
-
-- 3️⃣ Levantar Gateway:
-- mvn spring-boot:run
-
-
-- Puerto: 8080
-
-- 4️⃣ Levantar Product-Service y Order-Service
-- 5️⃣ Probar endpoints vía Gateway:
-- GET http://localhost:8080/api/product/find/1
-- GET http://localhost:8080/api/order/find/1
-
-
-- Si llegan correctamente → routing OK.
 ---
-## 📚 Diagrama de secuencia (flujo de request)
-User → Gateway → Eureka (resolve) → Service → Response → Gateway → User
 
-## 🛡️ Mejoras futuras
+## Service Discovery
 
-🔹 Agregarle front funcional
+The system uses **Netflix Eureka** for service discovery.
 
-🔹 Implementar concurrencia
+Each microservice registers itself with Eureka and can be located by its logical service name.
 
-🔹 Migrar a Docker Compose
+This allows the Gateway and inter-service communication to avoid hardcoding service hostnames and ports.
 
-🔹 Añadir un servicio de autenticación
+---
 
-🔹 Logging distribuido con traceId
+## Database Architecture
 
-🔹 Implementar Kafka para eventos (alta de pedidos, etc.)
+Each business microservice has an independent database:
 
-## 👨‍💻 Autor
+```text
+User Service    → MongoDB
+Product Service → MySQL
+Order Service   → PostgreSQL
+```
+
+No business microservice directly accesses another service's database.
+
+Communication between services is performed through their APIs.
+
+This follows the **database-per-service** approach commonly used in microservice architectures.
+
+---
+
+## Docker
+
+The entire ecosystem is containerized.
+
+Each microservice has its own `Dockerfile`, and the complete environment can be started using Docker Compose.
+
+```bash
+docker compose up
+```
+
+This allows the application, infrastructure services, and databases to be started together without manually configuring each component.
+
+---
+
+## Testing
+
+The project includes automated tests using:
+
+* JUnit 5
+* Mockito
+* MockMvc
+
+Tests currently cover controllers and service-layer behavior across the microservices.
+
+Each service also implements centralized exception handling through a `GlobalExceptionHandler` and a consistent `ApiError` response structure.
+
+---
+
+## Current Development
+
+The project is actively evolving.
+
+Planned improvements include:
+
+* Completing the security model across the microservices ecosystem.
+* Implementing stronger authorization and role-based access control.
+* Improving order and inventory management.
+* Introducing asynchronous communication with Apache Kafka.
+* Addressing concurrency and stock consistency.
+* Improving resilience and failure handling.
+* Adding observability and monitoring.
+* Expanding automated test coverage.
+* Adding API documentation.
+* Implementing CI/CD.
+
+---
+
+## Goals
+
+Order MGMT is primarily a learning and portfolio project focused on applying backend engineering concepts in a distributed architecture.
+
+The main objectives are:
+
+* Understanding microservice architecture in practice.
+* Working with service discovery and centralized configuration.
+* Designing independent persistence layers.
+* Implementing synchronous service-to-service communication.
+* Exploring reactive API Gateway development.
+* Applying Spring Security and JWT authentication.
+* Practicing Hexagonal Architecture.
+* Containerizing a complete distributed application.
+* Understanding the challenges introduced by distributed systems.
+
+---
+
+## Author
 
 **Emiliano Barrientos**
-Backend Developer — Java / Spring Boot
+
+Backend Developer focused on **Java, Spring Boot and distributed systems**.
+
