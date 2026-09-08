@@ -1,6 +1,7 @@
 package com.ordermgmt.gateway.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
 import org.springframework.core.io.buffer.DataBuffer;
@@ -19,6 +20,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 @Component
+@Slf4j
 public class AuthResponseFilter extends AbstractGatewayFilterFactory<AuthResponseFilter.Config> {
 
     private final ObjectMapper objectMapper;
@@ -68,6 +70,8 @@ public class AuthResponseFilter extends AbstractGatewayFilterFactory<AuthRespons
                                 }
                             } catch (Exception e) {
                                 // Si no es JSON o no tiene token, dejamos pasar
+                                log.error("Error procesando respuesta de auth: {}", e.getMessage());
+
                             }
 
                             // Devolvemos el body original sin el token
