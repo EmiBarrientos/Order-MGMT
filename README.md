@@ -346,6 +346,129 @@ The main objectives are:
 * Understanding the challenges introduced by distributed systems.
 
 ---
+## Getting Started
+
+### Prerequisites
+
+Before running the project, make sure you have installed:
+
+* [Git](https://git-scm.com/)
+* [Docker](https://www.docker.com/)
+* Docker Compose
+
+Java and Maven are only required if you want to run individual services outside Docker.
+
+### Clone the repository
+
+```bash
+git clone https://github.com/EmiBarrientos/Order-MGMT.git
+cd Order-MGMT
+```
+
+### Run the application
+
+The complete application can be started using Docker Compose:
+
+```bash
+docker compose up --build
+```
+
+Docker Compose builds and starts the application services and connects them through an internal Docker network.
+
+### Architecture and service communication
+
+The **API Gateway** acts as the main entry point for external API requests.
+
+The business microservices communicate internally through the Docker network and are not directly exposed to the host.
+
+```text
+Client
+   │
+   │ HTTP :8080
+   ▼
+┌─────────────────┐
+│   API Gateway   │
+│      :8080      │
+└────────┬────────┘
+         │
+         │ Docker Network
+         │
+    ┌────┼─────────────┐
+    ▼    ▼             ▼
+ User   Product       Order
+Service Service      Service
+    │      │             │
+    ▼      ▼             ▼
+ MongoDB  MySQL      PostgreSQL
+```
+
+Services communicate with each other using their Docker service names rather than `localhost`.
+
+For example:
+
+```text
+http://product-service:8090
+http://order-service:9090
+```
+
+These addresses are intended for internal communication within the Docker network.
+
+### API access
+
+External requests should be sent through the API Gateway:
+
+```text
+http://localhost:8080
+```
+
+The Gateway routes requests to the corresponding microservice.
+
+### Infrastructure services
+
+The application also includes:
+
+* **Config Server** — centralized configuration.
+* **Eureka Server** — service discovery.
+* **API Gateway** — external entry point and request routing.
+* **User Service** — user management and authentication.
+* **Product Service** — product management.
+* **Order Service** — order management.
+
+### Databases
+
+Each business microservice uses its own database:
+
+| Service         | Database   |
+| --------------- | ---------- |
+| User Service    | MongoDB    |
+| Product Service | MySQL      |
+| Order Service   | PostgreSQL |
+
+The databases currently expose their ports to the host to facilitate local development, inspection and database management.
+
+### Stopping the application
+
+To stop the running containers:
+
+```bash
+docker compose down
+```
+
+To rebuild the application after making changes:
+
+```bash
+docker compose up --build
+```
+
+To stop the containers and remove their associated volumes:
+
+```bash
+docker compose down -v
+```
+
+> **Note:** Removing volumes will delete the persisted database data associated with the Docker volumes.
+
+
 
 ## Author
 
