@@ -1,8 +1,16 @@
-# Order MGMT
+# Order MGMT — Distributed Microservices Ecosystem
 
 Microservices-based order management system built with **Java and Spring Boot**, designed to explore distributed systems, service-to-service communication, centralized configuration, API Gateway patterns, authentication, and different architectural approaches.
 
 The project simulates an ecosystem where users can interact with products and create orders through a centralized API Gateway.
+
+[![Java](https://img.shields.io/badge/Java-17-orange.svg)](https://www.oracle.com/java/)
+[![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.x-brightgreen.svg)](https://spring.io/projects/spring-boot)
+[![Docker](https://img.shields.io/badge/Docker-Containerized-blue.svg)](https://www.docker.com/)
+
+> **Frontend Repository:** Looking for the UI? Check out the [OrderMGMT-Frontend](https://github.com/EmiBarrientos/OrderMGMT-Frontend) repository.
+
+
 
 ---
 
