@@ -8,7 +8,7 @@ The project simulates an ecosystem where users can interact with products and cr
 [![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.x-brightgreen.svg)](https://spring.io/projects/spring-boot)
 [![Docker](https://img.shields.io/badge/Docker-Containerized-blue.svg)](https://www.docker.com/)
 
-> **Frontend Repository:** Looking for the UI? Check out the [OrderMGMT-Frontend](https://github.com/EmiBarrientos/OrderMGMT-Frontend) repository.
+> **Frontend Repository:** Looking for the UI? Check out the [OrderMGMT-Frontend](https://github.com/EmiBarrientos/Order-MGMT-Frontend) repository.
 
 
 
