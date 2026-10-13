@@ -180,7 +180,7 @@ The Gateway communicates with services using their logical service names through
 
 The project currently uses **JWT-based authentication** with Spring Security.
 
-The authentication flow is designed around an HTTP-only cookie containing the JWT.
+The authentication flow is implemented around an HTTP-only cookie containing the JWT.
 
 ```text
 Client
@@ -212,16 +212,11 @@ API Gateway
 Microservice
 ```
 
-The JWT currently identifies the authenticated user. Role-based authorization (`USER` / `ADMIN`) is not enforced yet and is the next planned step.
-The JWT already carries the user’s role; enforcing it per endpoint is the next step.
+The JWT is delivered to the client in an **HTTP-only cookie**, and the API Gateway validates it on every subsequent request.
 
-Supported roles currently include:
+The JWT identifies the authenticated user and already carries the user's role (`USER` / `ADMIN`).
 
-* `USER`
-* `ADMIN`
-
-> Authentication and authorization are still under active development.
-> **Status:** Authentication (login, JWT issuing, HTTP-only cookie delivery and gateway-side validation) is implemented. Authorization (role-based access rules per endpoint) is not implemented yet.
+> **Status:** Authentication (login, JWT issuing, HTTP-only cookie delivery and gateway-side validation) is implemented. Authorization (enforcing role-based access rules per endpoint) is not implemented yet and is the next planned step.
 
 ---
 
@@ -326,7 +321,6 @@ The project is actively evolving.
 
 Planned improvements include:
 
-* Completing the security model across the microservices ecosystem.
 * Implementing role-based authorization (`USER` / `ADMIN`) per endpoint.
 * Improving order and inventory management.
 * Introducing asynchronous communication with Apache Kafka.
