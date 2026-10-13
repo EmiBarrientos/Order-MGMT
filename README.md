@@ -212,7 +212,8 @@ API Gateway
 Microservice
 ```
 
-The JWT currently contains information used to identify the authenticated user and support role-based access control.
+The JWT currently identifies the authenticated user. Role-based authorization (`USER` / `ADMIN`) is not enforced yet and is the next planned step.
+The JWT already carries the user’s role; enforcing it per endpoint is the next step.
 
 Supported roles currently include:
 
@@ -220,6 +221,7 @@ Supported roles currently include:
 * `ADMIN`
 
 > Authentication and authorization are still under active development.
+> **Status:** Authentication (login, JWT issuing, HTTP-only cookie delivery and gateway-side validation) is implemented. Authorization (role-based access rules per endpoint) is not implemented yet.
 
 ---
 
@@ -325,7 +327,7 @@ The project is actively evolving.
 Planned improvements include:
 
 * Completing the security model across the microservices ecosystem.
-* Implementing stronger authorization and role-based access control.
+* Implementing role-based authorization (`USER` / `ADMIN`) per endpoint.
 * Improving order and inventory management.
 * Introducing asynchronous communication with Apache Kafka.
 * Addressing concurrency and stock consistency.
