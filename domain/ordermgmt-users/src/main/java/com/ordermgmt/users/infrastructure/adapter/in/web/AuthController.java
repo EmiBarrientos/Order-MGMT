@@ -8,6 +8,9 @@ import com.ordermgmt.users.domain.port.in.RegisterUserUseCase;
 import com.ordermgmt.users.infrastructure.adapter.in.web.dto.AuthResponse;
 import com.ordermgmt.users.infrastructure.adapter.in.web.dto.LoginRequest;
 import com.ordermgmt.users.infrastructure.adapter.in.web.dto.RegisterRequest;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -52,4 +55,32 @@ public class AuthController {
                         .build()
         );
     }
+
+    @GetMapping("/me")
+    public ResponseEntity<AuthResponse> me(HttpServletRequest request) {
+        String username = request.getHeader("X-User-Name");
+        String role = request.getHeader("X-User-Role");
+
+        if (username == null || role == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        return ResponseEntity.ok(
+                AuthResponse.builder()
+                        .username(username)
+                        .role(role)
+                        .build()
+        );
+    }
+    @PostMapping("/logout")
+    public ResponseEntity<Void> logout(HttpServletResponse response) {
+        Cookie cookie = new Cookie("jwt", null);
+        cookie.setHttpOnly(true);
+        cookie.setSecure(false); // true en producción
+        cookie.setPath("/");
+        cookie.setMaxAge(0);
+        response.addCookie(cookie);
+        return ResponseEntity.ok().build();
+    }
+
 }

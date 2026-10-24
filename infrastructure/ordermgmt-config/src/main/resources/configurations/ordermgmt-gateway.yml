@@ -13,9 +13,13 @@ spring:
         - id: ordermgmt-users
           uri: http://ordermgmt-users:8092
           predicates:
-            - Path=/auth/**
+            - Path=/auth/login
           filters:
             - AuthResponse
+        - id: ordermgmt-users-public
+          uri: http://ordermgmt-users:8092
+          predicates:
+            - Path=/auth/register, /auth/me, /auth/logout
         - id: ordermgmt-product
           uri: http://ordermgmt-product:8090
           predicates:
